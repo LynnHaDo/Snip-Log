@@ -5,6 +5,11 @@ const LANG_IDS = {
     java: 62
 }
 
+const STARTER_CODE = {
+    python: '# Example:\nprint("Hello, World!")',
+    java: '// Example:\nSystem.out.println("Hello, World!")'
+}
+
 const JUDGE0_API_URL = process.env.JUDGE0_API_URL
 const RAPID_API_KEY = process.env.RAPID_API_KEY
 const RAPID_API_HOST = process.env.RAPID_API_HOST
