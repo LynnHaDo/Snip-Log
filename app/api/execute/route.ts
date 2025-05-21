@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 
-const LANG_IDS = {
+export const LANG_IDS = {
     python: 71,
     java: 62
 }
 
-const STARTER_CODE = {
+export const STARTER_CODE = {
     python: '# Example:\nprint("Hello, World!")',
     java: '// Example:\nSystem.out.println("Hello, World!")'
 }
