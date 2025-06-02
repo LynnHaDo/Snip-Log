@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+'use client'
+
+import { useEffect, useState } from "react";
 
 import { CodeEditor } from "@/components/CodeEditor";
 import { LanguageSelector } from "@/components/LanguageSelector";
