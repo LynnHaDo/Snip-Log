@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignOutButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
-import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ConvexReactClient } from "convex/react";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 
 const geistSans = Geist({
@@ -27,24 +25,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
     return (
-        <ConvexClientProvider>
+        <ClerkProvider>
             <html lang="en">
                     <body
                         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
                     >
-                        <header className="flex justify-end items-center p-4 gap-4 h-16">
-                            <SignedOut>
-                                <SignInButton />
-                                <SignUpButton />
-                            </SignedOut>
-                            <SignedIn>
-                                <UserButton />
-                                <SignOutButton />
-                            </SignedIn>
-                        </header>
-                        {children}
+                        <ConvexClientProvider>{children}</ConvexClientProvider>
                     </body>
                 </html>
-        </ConvexClientProvider>
+        </ClerkProvider>
     );
 }
