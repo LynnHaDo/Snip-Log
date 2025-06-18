@@ -1,0 +1,64 @@
+import { METADATA } from "@/app/constants";
+import Logo from "@/components/Logo";
+import { api } from "@/convex/_generated/api";
+import { SignedIn, SignedOut, SignInButton, SignOutButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import { ConvexHttpClient } from "convex/browser";
+import { Code2 } from "lucide-react";
+import Link from "next/link";
+
+async function Header() {
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
+    const user = await currentUser();
+
+    const convexUser = await convex.query(api.users.getUser,
+        {
+            userId: user?.id || ""
+        }
+    )
+
+    return (
+        <div className="relative z-10">
+            <div className="flex items-center lg:justify-between 
+                            justify-center backdrop-blur-xl p-6 mb-4 rounded-lg">
+                <div className="hidden lg:flex items-center gap-8">
+                    <Link href="/" className="flex items-center gap-3 group relative">
+                        {/* Logo */}
+                        <div className="relative p-2 rounded-xl ring-1 ring-white/10 group-hover:ring-white/20 transition-all">
+                            <Logo className="size-6 text-green-400 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
+                        </div>
+
+                        <div className="flex flex-col">
+                        <span className="block text-lg font-semibold text-green-400 bg-clip-text">
+                            {METADATA.title as string}
+                        </span>
+                        </div>
+                    </Link>
+
+                    {/* Navigation */}
+                    <nav className="flex items-center space-x-1">
+                        <Link
+                        href="/snippets"
+                        className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
+                            hover:bg-green-500/10 border border-gray-800 hover:border-green-500/50 transition-all duration-300 shadow-lg overflow-hidden"
+                        >
+                        <div
+                            className="absolute inset-0 bg-gradient-to-r from-white-500/10 
+                            to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                        />
+                        <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
+                        <span
+                            className="text-sm font-medium relative z-10 group-hover:text-white
+                            transition-colors"
+                        >
+                            Snippets
+                        </span>
+                        </Link>
+                    </nav>
+                </div>   
+            </div>
+        </div>
+    );
+}
+
+export default Header;

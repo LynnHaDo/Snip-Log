@@ -1,5 +1,6 @@
 import { SquareCode } from "lucide-react";
 import Link from 'next/link';
+import Logo from "./Logo";
 
 export function Footer({slogan}: {slogan: string}) {
     return (
@@ -8,7 +9,7 @@ export function Footer({slogan}: {slogan: string}) {
             <div className="max-w-7xl mx-auto px-4 py-8">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-gray-400">
-                    <SquareCode className="size-5" />
+                    <Logo className="size-5" />
                     <span>{slogan}</span>
                 </div>
                 <div className="flex items-center gap-6">
