@@ -33,7 +33,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
   }, []);
 
   const handleLanguageSelect = (langId: string) => {
-    if (!props.hasAccess && langId !== "javascript") return;
+    if (!props.hasAccess && langId !== DEFAULT_LANGUAGE) return;
 
     setLanguage(langId);
     setIsOpen(false);
