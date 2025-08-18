@@ -9,6 +9,8 @@ export const DEFAULT_THEME = "vs-dark"
 export const DEFAULT_EDITOR_FONT_SIZE_KEY = "editor-font-size";
 export const DEFAULT_EDITOR_FONT_SIZE = 16;
 
+export const DEFAULT_CODE_KEY_PREFIX = "editor-code";
+
 export const DEFAULT_CODE_CONFIGS: CodeEditorConfigs = {
     language: DEFAULT_LANGUAGE,
     theme: DEFAULT_THEME,

@@ -1,4 +1,4 @@
-import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL } from "@/constants/editorConstants";
+import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL, DEFAULT_CODE_KEY_PREFIX } from "@/constants/editorConstants";
 import { CodeEditorConfigs, CodeEditorState } from "@/types/codeEditor";
 import { create } from "zustand";
 import { EditorProps } from "@monaco-editor/react";
@@ -33,7 +33,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         executionResult: null,
 
         setEditor: (editor: EditorProps) => {
-            const savedCode = localStorage.getItem(`editor-code-${get().configs.language}`);
+            const savedCode = localStorage.getItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`);
             if (savedCode) editor.value = savedCode;
 
             set({ editor });
@@ -46,7 +46,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             const currentCode = get().editor?.value;
 
             if (currentCode) {
-                localStorage.setItem(`editor-code-${get().configs.language}`, currentCode);
+                localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`, currentCode);
             }
 
             localStorage.setItem(DEFAULT_LANGUAGE_KEY, newLanguage);
