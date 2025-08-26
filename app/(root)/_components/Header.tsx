@@ -1,4 +1,4 @@
-import { METADATA } from "@/app/constants";
+import { METADATA } from "@/constants/general";
 import Logo from "@/components/Logo";
 import { api } from "@/convex/_generated/api";
 import { SignedIn } from "@clerk/nextjs";

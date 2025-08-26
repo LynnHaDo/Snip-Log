@@ -1,7 +1,7 @@
 import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL, DEFAULT_CODE_KEY_PREFIX } from "@/constants/editorConstants";
 import { CodeEditorConfigs, CodeEditorState } from "@/types/codeEditor";
 import { create } from "zustand";
-import { EditorProps } from "@monaco-editor/react";
+import ICodeEditor, { EditorProps, Monaco } from '@monaco-editor/react';
 import { LANGUAGES_CONFIGS } from "@/app/(root)/_constants/languageConfig";
 
 function getInitialCodeConfigs(): CodeEditorConfigs {
@@ -29,21 +29,17 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         output: "",
         isRunning: false,
         error: null,
-        editor: null,
         executionResult: null,
+        code: "",
 
-        setEditor: (editor: EditorProps) => {
-            const savedCode = localStorage.getItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`);
-            if (savedCode) editor.value = savedCode;
-
-            set({ editor });
+        setCode: (code: string) => {
+            localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`, code);
+            set({ code });
         },
-
-        getCode: () => get().editor?.value || "",
 
         setLanguage: (newLanguage: string) => {
             // Save current language code before switching
-            const currentCode = get().editor?.value;
+            const currentCode = get().code;
 
             if (currentCode) {
                 localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`, currentCode);
@@ -69,10 +65,8 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         },
 
         runCode: async () => {
-            const { configs, getCode } = get();
-
+            const { configs, code } = get();
             const language = configs.language;
-            const code = getCode();
 
             if (!code) {
                 set({ error: "Please enter some code" });

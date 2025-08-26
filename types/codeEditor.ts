@@ -28,11 +28,10 @@ export interface CodeEditorState {
   output: string;
   isRunning: boolean;
   error: string | null;
-  editor: EditorProps | null;
+  code: string;
   executionResult: ExecutionResult | null;
 
-  setEditor: (editor: EditorProps) => void;
-  getCode: () => string;
+  setCode: (code: string) => void;
   setLanguage: (language: string) => void;
   setTheme: (theme: string) => void;
   setFontSize: (fontSize: number) => void;
