@@ -4,6 +4,7 @@ import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
+import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState("");
@@ -33,7 +34,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-[#1e1e2e] rounded-lg p-6 w-full max-w-md">
+      <div className={`bg-[${DEFAULT_STYLE.backgroundColorLight}] rounded-lg p-6 w-full max-w-md`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Share Snippet</h2>
           <button

@@ -34,6 +34,7 @@ export interface CodeEditorState {
   setCode: (code: string) => void;
   setLanguage: (language: string) => void;
   setTheme: (theme: string) => void;
+  getLanguageImageSrc: () => string;
   setFontSize: (fontSize: number) => void;
   runCode: () => Promise<void>;
 }

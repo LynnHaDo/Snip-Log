@@ -1,6 +1,5 @@
 import { Theme } from "@/types/theme";
-import { EditorProps, Monaco } from "@monaco-editor/react";
-import { Editor } from "@monaco-editor/react";
+import { Monaco } from "@monaco-editor/react";
 
 export const THEMES: Theme[] = [
   { id: "vs-dark", label: "VS Dark", color: "#1e1e1e" },

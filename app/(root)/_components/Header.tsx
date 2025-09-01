@@ -1,4 +1,4 @@
-import { METADATA } from "@/constants/general";
+import { METADATA } from "../_constants/editorConfig";
 import Logo from "@/components/Logo";
 import { api } from "@/convex/_generated/api";
 import { SignedIn } from "@clerk/nextjs";
@@ -11,6 +11,7 @@ import HeaderProfileBtn from "./HeaderProfileBtn";
 import LanguageSelector from "./LanguageSelector";
 import RunButton from "./RunButton";
 import ThemeSelector from "./ThemeSelector";
+import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 async function Header() {
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
@@ -30,11 +31,11 @@ async function Header() {
                     <Link href="/" className="flex items-center gap-3 group relative">
                         {/* Logo */}
                         <div className="relative p-2 rounded-xl ring-1 ring-white/10 group-hover:ring-white/20 transition-all">
-                            <Logo className="size-6 text-green-400 transform -rotate-6 group-hover:rotate-0 transition-transform duration-500" />
+                            <Logo className={`size-6 transform text-logo -rotate-6 group-hover:rotate-0 transition-transform duration-500`} />
                         </div>
 
                         <div className="flex flex-col">
-                        <span className="block text-lg font-semibold text-green-400 bg-clip-text">
+                        <span className={`block text-lg text-logo font-semibold bg-clip-text`}>
                             {METADATA.title as string}
                         </span>
                         </div>
@@ -44,12 +45,12 @@ async function Header() {
                     <nav className="flex items-center space-x-1">
                         <Link
                         href="/snippets"
-                        className="relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
-                            hover:bg-green-500/10 border border-gray-800 hover:border-green-500/50 transition-all duration-300 shadow-lg overflow-hidden"
+                        className={`relative group flex items-center gap-2 px-4 py-1.5 rounded-lg text-gray-300 bg-gray-800/50 
+                            hover:bg-[${DEFAULT_STYLE.logoTextColor}]-500/10 border border-gray-800 hover:border-[${DEFAULT_STYLE.logoTextColor}]-500/50 transition-all duration-300 shadow-lg overflow-hidden`}
                         >
                         <div
-                            className="absolute inset-0 bg-gradient-to-r from-white-500/10 
-                            to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className={`absolute inset-0 bg-gradient-to-r from-white-500/10 
+                            to-[${DEFAULT_STYLE.logoTextColor}]-500/10 opacity-0 group-hover:opacity-100 transition-opacity`}
                         />
                         <Code2 className="w-4 h-4 relative z-10 group-hover:rotate-3 transition-transform" />
                         <span

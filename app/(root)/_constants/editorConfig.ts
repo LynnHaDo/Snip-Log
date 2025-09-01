@@ -1,4 +1,5 @@
 import { CodeEditorConfigs } from "@/types/codeEditor";
+import type { Metadata } from "next";
 
 export const DEFAULT_LANGUAGE_KEY = "editor-language";
 export const DEFAULT_LANGUAGE = "python"
@@ -18,3 +19,8 @@ export const DEFAULT_CODE_CONFIGS: CodeEditorConfigs = {
 }
 
 export const DEFAULT_CODE_SUBMISSION_URL = "https://emkc.org/api/v2/piston/execute"
+
+export const METADATA: Metadata = {
+  title: "SnipLog",
+  description: "code diary for leetcode procrastinators",
+};

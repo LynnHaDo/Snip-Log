@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoLogoGithub } from "react-icons/io";
 import { THEMES } from "../_constants/themeConfig";
 import { AnimatePresence, motion } from "motion/react";
+import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 const THEME_ICONS: Record<string, React.ReactNode> = {
   "vs-dark": <Moon className="size-4" />,
@@ -47,8 +48,8 @@ export default function ThemeSelector() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-48 group relative flex items-center gap-2 px-4 py-1.5 bg-[#1e1e2e]/80 hover:bg-[#262637] 
-        rounded-lg transition-all duration-200 border border-gray-800/50 hover:border-gray-700"
+        className={`w-48 group relative flex items-center gap-2 px-4 py-1.5 bg-[${DEFAULT_STYLE.backgroundColorLight}]/80 hover:bg-[#262637] 
+        rounded-lg transition-all duration-200 border border-gray-800/50 hover:border-gray-700`}
       >
         {/* hover state bg decorator */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -74,8 +75,8 @@ export default function ThemeSelector() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 mt-2 w-full min-w-[240px] bg-[#1e1e2e]/95 
-            backdrop-blur-xl rounded-xl border border-[#313244] shadow-2xl py-2 z-50"
+            className={`absolute top-full left-0 mt-2 w-full min-w-[240px] bg-[${DEFAULT_STYLE.backgroundColorLight}]/95 
+            backdrop-blur-xl rounded-xl border border-[#313244] shadow-2xl py-2 z-50`}
           >
             <div className="px-2 pb-2 mb-2 border-b border-gray-800/50">
               <p className="text-xs font-medium text-gray-400 px-2">Select Theme</p>

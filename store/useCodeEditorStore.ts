@@ -1,7 +1,6 @@
-import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL, DEFAULT_CODE_KEY_PREFIX } from "@/constants/editorConstants";
+import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL, DEFAULT_CODE_KEY_PREFIX } from "@/app/(root)/_constants/editorConfig";
 import { CodeEditorConfigs, CodeEditorState } from "@/types/codeEditor";
 import { create } from "zustand";
-import ICodeEditor, { EditorProps, Monaco } from '@monaco-editor/react';
 import { LANGUAGES_CONFIGS } from "@/app/(root)/_constants/languageConfig";
 
 function getInitialCodeConfigs(): CodeEditorConfigs {
@@ -62,6 +61,10 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         setFontSize: (fontSize: number) => {
             localStorage.setItem(DEFAULT_EDITOR_FONT_SIZE_KEY, String(fontSize));
             get().configs.fontSize = fontSize;
+        },
+
+        getLanguageImageSrc: () => {
+            return `/${get().configs.language}.png`
         },
 
         runCode: async () => {
