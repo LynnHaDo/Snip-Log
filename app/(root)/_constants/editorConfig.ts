@@ -1,5 +1,6 @@
 import { CodeEditorConfigs } from "@/types/codeEditor";
 import type { Metadata } from "next";
+import IStandaloneEditorConstructionOptions from "@monaco-editor/react"
 
 export const DEFAULT_LANGUAGE_KEY = "editor-language";
 export const DEFAULT_LANGUAGE = "python"
@@ -24,3 +25,30 @@ export const METADATA: Metadata = {
   title: "SnipLog",
   description: "code diary for leetcode procrastinators",
 };
+
+export const MONACO_RENDER_WHITESPACE = "selection" as const
+export const DEFAULT_MONACO_CURSOR_BLINKING = "smooth" as const
+export const DEFAULT_MONACO_RENDER_LINE_HIGHLIGHT = "all" as const
+export const DEFAULT_MONACO_EDITOR_FONT_FAMILY = '"Fira Code", "Cascadia Code", Consolas, monospace'
+
+export const DEFAULT_MONACO_CODE_CONFIGS = {
+    minimap: { enabled: false },
+    fontSize: DEFAULT_EDITOR_FONT_SIZE,
+    automaticLayout: true,
+    scrollBeyondLastLine: false,
+    padding: { top: 16, bottom: 16 },
+    renderWhitespace: MONACO_RENDER_WHITESPACE,
+    fontFamily: DEFAULT_MONACO_EDITOR_FONT_FAMILY,
+    fontLigatures: true,
+    cursorBlinking: DEFAULT_MONACO_CURSOR_BLINKING,
+    smoothScrolling: true,
+    contextmenu: true,
+    renderLineHighlight: DEFAULT_MONACO_RENDER_LINE_HIGHLIGHT,
+    lineHeight: 1.6,
+    letterSpacing: 0.5,
+    roundedSelection: true,
+    scrollbar: {
+        verticalScrollbarSize: 8,
+        orizontalScrollbarSize: 8,
+    },
+}

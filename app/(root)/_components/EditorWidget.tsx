@@ -7,6 +7,7 @@ import {
   DEFAULT_EDITOR_FONT_SIZE,
   DEFAULT_EDITOR_FONT_SIZE_KEY,
   DEFAULT_LANGUAGE,
+  DEFAULT_MONACO_CODE_CONFIGS,
 } from "../_constants/editorConfig";
 import { LANGUAGES_CONFIGS } from "../_constants/languageConfig";
 import { useEffect, useRef, useState } from "react";
@@ -139,34 +140,16 @@ export default function EditorWidget() {
         {/* Editor  */}
         <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
           {clerk.loaded ? (
-            <Editor
+            <Editor 
               height="600px"
               language={LANGUAGES_CONFIGS[configs.language].monacoLanguage}
               onChange={handleEditorChange}
               theme={configs.theme}
               beforeMount={defineMonacoThemes}
               onMount={handleEditorDidMount}
-              options={{
-                minimap: { enabled: false },
-                fontSize: configs.fontSize,
-                automaticLayout: true,
-                scrollBeyondLastLine: false,
-                padding: { top: 16, bottom: 16 },
-                renderWhitespace: "selection",
-                fontFamily: '"Fira Code", "Cascadia Code", Consolas, monospace',
-                fontLigatures: true,
-                cursorBlinking: "smooth",
-                smoothScrolling: true,
-                contextmenu: true,
-                renderLineHighlight: "all",
-                lineHeight: 1.6,
-                letterSpacing: 0.5,
-                roundedSelection: true,
-                scrollbar: {
-                  verticalScrollbarSize: 8,
-                  horizontalScrollbarSize: 8,
-                },
-              }}
+              options={
+                DEFAULT_MONACO_CODE_CONFIGS
+              }
             />
           ) : (
             <EditorWidgetSkeleton />
