@@ -18,9 +18,9 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
     const [isOpen, setIsOpen] = useState(false);
     const mounted = useMounted();
 
-    const { setLanguage, configs } = useCodeEditorStore();
+    const { setLanguage, language } = useCodeEditorStore();
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const currentLanguageObj = LANGUAGES_CONFIGS[configs.language];
+    const currentLanguageObj = LANGUAGES_CONFIGS[language];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,7 +51,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
         className={`group relative flex items-center gap-3 px-4 py-1.5 bg-[${DEFAULT_STYLE.backgroundColorLight}]/80 
       rounded-lg transition-all 
        duration-200 border border-gray-800/50 hover:border-gray-700
-       ${!props.hasAccess && configs.language !== DEFAULT_LANGUAGE ? "opacity-50 cursor-not-allowed" : ""}`}
+       ${!props.hasAccess && language !== DEFAULT_LANGUAGE ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         {/* Decoration */}
         <div
@@ -109,7 +109,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
                     <button
                       className={`
                       relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200
-                      ${configs.language === lang.id ? "bg-blue-500/10 text-blue-400" : "text-gray-300"}
+                      ${language === lang.id ? "bg-blue-500/10 text-blue-400" : "text-gray-300"}
                       ${isLocked ? "opacity-50" : "hover:bg-[#262637]"}
                     `}
                       onClick={() => handleLanguageSelect(lang.id)}
@@ -124,7 +124,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
                       <div
                         className={`
                          relative size-8 rounded-lg p-1.5 group-hover:scale-110 transition-transform
-                         ${configs.language === lang.id ? "bg-blue-500/10" : "bg-gray-800/50"}
+                         ${language === lang.id ? "bg-blue-500/10" : "bg-gray-800/50"}
                        `}
                       >
                         <div
@@ -145,7 +145,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
                       </span>
 
                       {/* selected language border */}
-                      {configs.language === lang.id && (
+                      {language === lang.id && (
                         <motion.div
                           className="absolute inset-0 border-2 border-blue-500/30 rounded-lg"
                           transition={{
@@ -159,7 +159,7 @@ export default function LanguageSelector(props: LanguageSelectorProps) {
                       {isLocked ? (
                         <Lock className="w-4 h-4 text-gray-500" />
                       ) : (
-                        configs.language === lang.id && (
+                        language === lang.id && (
                           <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
                         )
                       )}

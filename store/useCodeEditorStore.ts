@@ -1,9 +1,9 @@
 import { DEFAULT_CODE_CONFIGS, DEFAULT_EDITOR_FONT_SIZE, DEFAULT_LANGUAGE, DEFAULT_LANGUAGE_KEY, DEFAULT_THEME, DEFAULT_THEME_KEY, DEFAULT_EDITOR_FONT_SIZE_KEY, DEFAULT_CODE_SUBMISSION_URL, DEFAULT_CODE_KEY_PREFIX } from "@/app/(root)/_constants/editorConfig";
-import { CodeEditorConfigs, CodeEditorState } from "@/types/codeEditor";
+import { CodeEditorState } from "@/types/codeEditor";
 import { create } from "zustand";
 import { LANGUAGES_CONFIGS } from "@/app/(root)/_constants/languageConfig";
 
-function getInitialCodeConfigs(): CodeEditorConfigs {
+function getInitialCodeConfigs() {
     if (typeof window === "undefined") {
         // if we're on the server side
         return DEFAULT_CODE_CONFIGS;
@@ -21,10 +21,10 @@ function getInitialCodeConfigs(): CodeEditorConfigs {
 }
 
 export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
-    const initialCodeConfigs: CodeEditorConfigs = getInitialCodeConfigs();
+    const initialCodeConfigs = getInitialCodeConfigs();
 
     return {
-        configs: initialCodeConfigs,
+        ...initialCodeConfigs,
         output: "",
         isRunning: false,
         error: null,
@@ -32,7 +32,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         code: "",
 
         setCode: (code: string) => {
-            localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`, code);
+            localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().language}`, code);
             set({ code });
         },
 
@@ -41,35 +41,38 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             const currentCode = get().code;
 
             if (currentCode) {
-                localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().configs.language}`, currentCode);
+                localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${get().language}`, currentCode);
             }
 
             localStorage.setItem(DEFAULT_LANGUAGE_KEY, newLanguage);
 
-            get().configs.language = newLanguage
             set({
+                language: newLanguage,
                 output: "",
                 error: null,
             });
         },
 
-        setTheme: (theme: string) => {
-            localStorage.setItem(DEFAULT_THEME_KEY, theme);
-            get().configs.theme = theme;
+        setTheme: (newTheme: string) => {
+            localStorage.setItem(DEFAULT_THEME_KEY, newTheme);
+            set({
+                theme: newTheme
+            })
         },
 
-        setFontSize: (fontSize: number) => {
-            localStorage.setItem(DEFAULT_EDITOR_FONT_SIZE_KEY, String(fontSize));
-            get().configs.fontSize = fontSize;
+        setFontSize: (newFontSize: number) => {
+            localStorage.setItem(DEFAULT_EDITOR_FONT_SIZE_KEY, String(newFontSize));
+            set({
+                fontSize: newFontSize
+            })
         },
 
         getLanguageImageSrc: () => {
-            return `/${get().configs.language}.png`
+            return `/${get().language}.png`
         },
 
         runCode: async () => {
-            const { configs, code } = get();
-            const language = configs.language;
+            const { language, code } = get();
 
             if (!code) {
                 set({ error: "Please enter some code" });

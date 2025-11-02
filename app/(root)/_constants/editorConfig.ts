@@ -1,6 +1,4 @@
-import { CodeEditorConfigs } from "@/types/codeEditor";
 import type { Metadata } from "next";
-import IStandaloneEditorConstructionOptions from "@monaco-editor/react"
 
 export const DEFAULT_LANGUAGE_KEY = "editor-language";
 export const DEFAULT_LANGUAGE = "python"
@@ -13,7 +11,7 @@ export const DEFAULT_EDITOR_FONT_SIZE = 16;
 
 export const DEFAULT_CODE_KEY_PREFIX = "editor-code";
 
-export const DEFAULT_CODE_CONFIGS: CodeEditorConfigs = {
+export const DEFAULT_CODE_CONFIGS = {
     language: DEFAULT_LANGUAGE,
     theme: DEFAULT_THEME,
     fontSize: DEFAULT_EDITOR_FONT_SIZE

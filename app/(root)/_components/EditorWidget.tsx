@@ -1,6 +1,7 @@
 "use client";
 
 import { Editor, EditorProps, Monaco } from "@monaco-editor/react";
+import { editor } from 'monaco-editor';
 import { useClerk } from "@clerk/nextjs";
 import {
   DEFAULT_CODE_KEY_PREFIX,
@@ -24,43 +25,43 @@ import { DEFAULT_STYLE } from "../_constants/styleConfig";
 export default function EditorWidget() {
   const clerk = useClerk();
   const mounted = useMounted();
-  const editorRef = useRef<EditorProps>(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor>(null);
   const [isShareDialogOpened, setIsShareDialogOpened] = useState(false);
-  const { configs, setFontSize, getLanguageImageSrc } = useCodeEditorStore();
+  const { fontSize, language, theme, setFontSize, getLanguageImageSrc } = useCodeEditorStore();
 
   useEffect(() => {
     const savedCode = localStorage.getItem(
-      `${DEFAULT_CODE_KEY_PREFIX}-${configs.language || DEFAULT_LANGUAGE}`
+      `${DEFAULT_CODE_KEY_PREFIX}-${language || DEFAULT_LANGUAGE}`
     );
     const currentCode =
-      savedCode || LANGUAGES_CONFIGS[configs.language].defaultCode;
+      savedCode || LANGUAGES_CONFIGS[language].defaultCode;
     if (editorRef.current) {
-      editorRef.current.value = currentCode;
+      editorRef.current.setValue(currentCode);
     }
-  }, [configs.language, editorRef]);
+  }, [language, editorRef]);
 
   useEffect(() => {
     const savedFontSize = localStorage.getItem(DEFAULT_EDITOR_FONT_SIZE_KEY);
     setFontSize(
       savedFontSize != null ? parseInt(savedFontSize) : DEFAULT_EDITOR_FONT_SIZE
     );
-  }, [configs.fontSize]);
+  }, [fontSize]);
 
   const handleRefresh = () => {
-    const defaultCode = LANGUAGES_CONFIGS[configs.language].defaultCode;
-    if (editorRef.current) editorRef.current.value = defaultCode;
-    localStorage.removeItem(`${DEFAULT_CODE_KEY_PREFIX}-${configs.language}`);
+    const defaultCode = LANGUAGES_CONFIGS[language].defaultCode;
+    if (editorRef.current) editorRef.current.setValue(defaultCode);
+    localStorage.removeItem(`${DEFAULT_CODE_KEY_PREFIX}-${language}`);
   };
 
   const handleEditorChange = (value: string | undefined) => {
     if (value)
       localStorage.setItem(
-        `${DEFAULT_CODE_KEY_PREFIX}-${configs.language}`,
+        `${DEFAULT_CODE_KEY_PREFIX}-${language}`,
         value
       );
   };
 
-  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
     editorRef.current = editor;
   };
 
@@ -101,14 +102,14 @@ export default function EditorWidget() {
                   type="range"
                   min="12"
                   max="24"
-                  value={configs.fontSize}
+                  value={fontSize}
                   onChange={(e) =>
                     handleFontSizeChange(parseInt(e.target.value))
                   }
                   className="w-20 h-1 bg-gray-600 rounded-lg cursor-pointer"
                 />
                 <span className="text-sm font-medium text-gray-400 min-w-[2rem] text-center">
-                  {configs.fontSize}
+                  {fontSize}
                 </span>
               </div>
             </div>
@@ -142,9 +143,9 @@ export default function EditorWidget() {
           {clerk.loaded ? (
             <Editor 
               height="600px"
-              language={LANGUAGES_CONFIGS[configs.language].monacoLanguage}
+              language={LANGUAGES_CONFIGS[language].monacoLanguage}
               onChange={handleEditorChange}
-              theme={configs.theme}
+              theme={theme}
               beforeMount={defineMonacoThemes}
               onMount={handleEditorDidMount}
               options={

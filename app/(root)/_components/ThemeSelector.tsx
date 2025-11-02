@@ -20,9 +20,9 @@ const THEME_ICONS: Record<string, React.ReactNode> = {
 export default function ThemeSelector() {
     const [isOpen, setIsOpen] = useState(false);
     const mounted = useMounted();
-    const { configs, setTheme } = useCodeEditorStore();
+    const { theme, setTheme } = useCodeEditorStore();
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const currentTheme = THEMES.find((t) => t.id === configs.theme);
+    const currentTheme = THEMES.find((t) => t.id === theme);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -90,7 +90,7 @@ export default function ThemeSelector() {
                 transition={{ delay: index * 0.1 }}
                 className={`
                 relative group w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#262637] transition-all duration-200 text-sm font-medium
-                ${configs.theme === t.id ? "bg-blue-500/10 text-blue-400" : "text-gray-300"}
+                ${theme === t.id ? "bg-blue-500/10 text-blue-400" : "text-gray-300"}
               `}
                 onClick={() => handleThemeSelect(t.id)}
               >
@@ -104,7 +104,7 @@ export default function ThemeSelector() {
                 <div
                   className={`
                 flex items-center justify-center size-8 rounded-lg
-                ${configs.theme === t.id ? "bg-blue-500/10 text-blue-400" : "bg-gray-800/50 text-gray-400"}
+                ${theme === t.id ? "bg-blue-500/10 text-blue-400" : "bg-gray-800/50 text-gray-400"}
                 group-hover:scale-110 transition-all duration-200
               `}
                 >
@@ -123,7 +123,7 @@ export default function ThemeSelector() {
                 />
 
                 {/* active theme border */}
-                {configs.theme === t.id && (
+                {theme === t.id && (
                   <motion.div
                     className="absolute inset-0 border-2 border-blue-500/30 rounded-lg"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}

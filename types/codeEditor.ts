@@ -17,14 +17,10 @@ export interface ExecutionResult {
   error: string | null;
 }
 
-export interface CodeEditorConfigs {
-    language: string; 
-    theme: string;
-    fontSize: number;
-}
-
 export interface CodeEditorState {
-  configs: CodeEditorConfigs;
+  fontSize: number;
+  language: string;
+  theme: string;
   output: string;
   isRunning: boolean;
   error: string | null;

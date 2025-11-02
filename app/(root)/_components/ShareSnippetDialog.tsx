@@ -9,7 +9,7 @@ import { DEFAULT_STYLE } from "../_constants/styleConfig";
 function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState("");
   const [isSharing, setIsSharing] = useState(false);
-  const { configs, setCode } = useCodeEditorStore();
+  const { fontSize, theme, language, setCode } = useCodeEditorStore();
   //const createSnippet = useMutation(api.snippets.createSnippet);
 
   const handleShare = async (e: React.FormEvent) => {
