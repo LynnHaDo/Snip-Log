@@ -87,7 +87,7 @@ export default function EditorWidget() {
               />
             </div>
             <div>
-              <h2 className="text-sm font-medium text-white">Code Editor</h2>
+              <h2 className="text-sm font-medium text-gray-300">Code Editor</h2>
               <p className="text-xs text-gray-500">
                 Write and execute your code
               </p>
@@ -106,7 +106,7 @@ export default function EditorWidget() {
                   onChange={(e) =>
                     handleFontSizeChange(parseInt(e.target.value))
                   }
-                  className="w-20 h-1 bg-gray-600 rounded-lg cursor-pointer"
+                  className="w-20 h-1 range-slider"
                 />
                 <span className="text-sm font-medium text-gray-400 min-w-[2rem] text-center">
                   {fontSize}
@@ -129,8 +129,7 @@ export default function EditorWidget() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setIsShareDialogOpened(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-gradient-to-r
-               from-blue-500 to-blue-600 opacity-90 hover:opacity-100 transition-opacity"
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-[#41BF9B] opacity-90 hover:opacity-100 transition-opacity`}
             >
               <ShareIcon className="size-4 text-white" />
               <span className="text-sm font-medium text-white">Share</span>

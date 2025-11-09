@@ -4,7 +4,7 @@ export interface Language {
     logoPath: string,
     monacoLanguage: string,
     defaultCode: string,
-    pistonRuntime: LanguageRuntime
+    runtimeConfig: LanguageRuntime
 }
 
 export interface LanguageRuntime {

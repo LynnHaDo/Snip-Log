@@ -75,8 +75,8 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={isSharing}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
-              disabled:opacity-50"
+              className={`px-4 py-2 bg-[${DEFAULT_STYLE.logoTextColor}]/90 text-white rounded-lg hover:bg-bg-[${DEFAULT_STYLE.logoTextColor}] 
+              disabled:opacity-50`}
             >
               {isSharing ? "Sharing..." : "Share"}
             </button>
