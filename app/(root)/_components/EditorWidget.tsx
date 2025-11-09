@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor, EditorProps, Monaco } from "@monaco-editor/react";
+import { Editor, Monaco } from "@monaco-editor/react";
 import { editor } from 'monaco-editor';
 import { useClerk } from "@clerk/nextjs";
 import {
@@ -148,9 +148,10 @@ export default function EditorWidget() {
               theme={theme}
               beforeMount={defineMonacoThemes}
               onMount={handleEditorDidMount}
-              options={
-                DEFAULT_MONACO_CODE_CONFIGS
-              }
+              options={{
+                fontSize: fontSize,
+                ...DEFAULT_MONACO_CODE_CONFIGS
+              }}
             />
           ) : (
             <EditorWidgetSkeleton />

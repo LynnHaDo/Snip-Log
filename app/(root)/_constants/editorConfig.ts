@@ -31,7 +31,6 @@ export const DEFAULT_MONACO_EDITOR_FONT_FAMILY = '"Fira Code", "Cascadia Code", 
 
 export const DEFAULT_MONACO_CODE_CONFIGS = {
     minimap: { enabled: false },
-    fontSize: DEFAULT_EDITOR_FONT_SIZE,
     automaticLayout: true,
     scrollBeyondLastLine: false,
     padding: { top: 16, bottom: 16 },

@@ -2,7 +2,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
-import { Footer } from "@/components/Footer";
 import { METADATA } from "./(root)/_constants/editorConfig";
 
 const geistSans = Geist({
@@ -31,7 +30,6 @@ export default function RootLayout({
                     className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col`}
                 >
                     <ConvexClientProvider>{children}</ConvexClientProvider>
-                    <Footer slogan={METADATA.description as string}/>
                 </body>
             </html>
         </ClerkProvider>
