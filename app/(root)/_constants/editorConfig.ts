@@ -17,8 +17,6 @@ export const DEFAULT_CODE_CONFIGS = {
     fontSize: DEFAULT_EDITOR_FONT_SIZE
 }
 
-export const DEFAULT_CODE_SUBMISSION_URL = "https://emkc.org/api/v2/piston/execute"
-
 export const METADATA: Metadata = {
   title: "SnipLog",
   description: "code diary for leetcode procrastinators",

@@ -1,21 +1,4 @@
-import { EditorProps } from "@monaco-editor/react";
 import { Id } from "@/convex/_generated/dataModel";
-
-export interface ExecuteCodeResponse {
-  compile?: {
-    output: string;
-  };
-  run?: {
-    output: string;
-    stderr: string;
-  };
-}
-
-export interface ExecutionResult {
-  code: string;
-  output: string;
-  error: string | null;
-}
 
 export interface CodeEditorState {
   fontSize: number;
@@ -25,7 +8,6 @@ export interface CodeEditorState {
   isRunning: boolean;
   error: string | null;
   code: string;
-  executionResult: ExecutionResult | null;
 
   setCode: (code: string) => void;
   setLanguage: (language: string) => void;

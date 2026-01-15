@@ -1,119 +1,102 @@
-import { NextResponse } from 'next/server'
+import {
+  JOB_PENDING_FLAG,
+  JOB_COMPLETED_FLAG,
+  DEFAULT_MAX_REQUEST_RETRIES,
+} from "@/constants/api";
+import { LanguageRuntime } from "@/types/language";
+import { NextResponse } from "next/server";
 
-export const LANG_IDS = {
-    python: 71,
-    java: 62
+const CODE_PROCESSING_BASE_URL = process.env.CODE_PROCESSING_BASE_URL;
+const SUBMIT_CODE_ENDPOINT = process.env.SUBMIT_CODE_ENDPOINT;
+const GET_RESULT_ENDPOINT = process.env.GET_RESULT_ENDPOINT;
+
+async function submitCode(sourceCode: string, runtimeConfig: LanguageRuntime) {
+  const response = await fetch(
+    `${CODE_PROCESSING_BASE_URL}${SUBMIT_CODE_ENDPOINT}`,
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        code: sourceCode,
+        runtimeConfig: runtimeConfig,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to send request to code execution queue. Status: ${response.status}.`
+    );
+  }
+
+  return await response.json();
 }
 
-export const STARTER_CODE = {
-    python: '# Example:\nprint("Hello, World!")',
-    java: '// Example:\nSystem.out.println("Hello, World!")'
-}
+async function getResult(submissionId: string) {
+  const response = await fetch(
+    `${CODE_PROCESSING_BASE_URL}${GET_RESULT_ENDPOINT}/${submissionId}`,
+    {
+      method: "GET",
+    }
+  );
 
-const JUDGE0_API_URL = process.env.JUDGE0_API_URL
-const RAPID_API_KEY = process.env.RAPID_API_KEY
-const RAPID_API_HOST = process.env.RAPID_API_HOST
+  if (!response.ok) {
+    throw new Error(
+      `Failed to retrieve result from code execution queue. Status: ${response.status}.`
+    );
+  }
 
-async function submitCode(sourceCode: string, languageId: number) {
-    const response = await fetch(`${JUDGE0_API_URL}/submissions`, {
-        method: "POST",
-        headers: {
-            "content-type": "application/json",
-            "X-RapidAPI-Key": RAPID_API_KEY!,
-            "X-RapidAPI-Host": RAPID_API_HOST!,
-        },
-        body: JSON.stringify({
-            source_code: sourceCode,
-            language_id: languageId,
-            stdin: ""
-        })
-    })
-
-    const data = await response.json()
-    return data.token 
-}
-
-async function getResult(token: string) {
-    const response = await fetch(`${JUDGE0_API_URL}/submissions/${token}`, {
-        method: "GET",
-        headers: {
-            "X-RapidAPI-Key": RAPID_API_KEY!,
-            "X-RapidAPI-Host": RAPID_API_HOST!
-        }
-    })
-
-    return await response.json()
+  return await response.json();
 }
 
 export async function POST(request: Request) {
-    try {
-        const { code, language } = await request.json()
+  try {
+    const { code, runtimeConfig } = await request.json();
 
-        // Get language ID 
-        const languageId = LANG_IDS[language as keyof typeof LANG_IDS]
+    // Submit code for execution
+    const response = await submitCode(code, runtimeConfig);
 
-        if (!languageId) {
-            return NextResponse.json(
-                { error: "Unsupported Language"},
-                { status: 400 }
-            )
-        }
-
-        let sourceCode = code;
-        if (language == "java") {
-             // Wrap Java code in Main class
-             sourceCode = `
-                public class Main {
-                    public static void main(String[] args) {
-                        ${code}
-                    }
-                }
-             `
-        }
-
-        // Submit code for execution
-        const token = await submitCode(sourceCode, languageId)
-
-        // Wait for result 
-        let result;
-        for (let i = 0; i < 10; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            result = await getResult(token);
-            if (result.status.id !== 1 && result.status.id !== 2) {
-                break;
-            }
-        }
-
-        if (result.status.id === 3) {
-            // Accepted
-            return NextResponse.json({
-                output: result.stdout || "Code executed successfully with no output.",
-                error: null
-            })
-        } 
-        else if (result.status.id === 6) {
-            // Compilation Error
-            return NextResponse.json({
-                output: null,
-                error: result.compile_output
-            })
-        }
-        else if (result.stderr) {
-            return NextResponse.json({
-                output: null,
-                error: result.stderr 
-            })
-        }
-        else {
-            return NextResponse.json({
-                output: null,
-                error: result.status.description
-            })
-        }
-    } catch (error: any) {
-        return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
-        )
+    if (!response.jobId) {
+      return NextResponse.json(
+        { error: `Response has missing field. Please try again.` },
+        { status: 500 }
+      );
     }
+
+    const submissionId = response.jobId;
+
+    // Wait for result
+    let result;
+    for (let i = 0; i < DEFAULT_MAX_REQUEST_RETRIES; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      result = await getResult(submissionId);
+      if (result.status !== JOB_PENDING_FLAG) {
+        break;
+      }
+    }
+
+    if (result.status === JOB_COMPLETED_FLAG) {
+      // Completed
+      return NextResponse.json(
+        {
+          output: result.output || "Code executed successfully with no output.",
+          error: result.error,
+          exitCode: result.exitCode,
+        },
+        { status: 200 }
+      );
+    } else {
+      // Failed
+      return NextResponse.json(
+        {
+          error: result.error,
+        },
+        { status: 200 }
+      );
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }
