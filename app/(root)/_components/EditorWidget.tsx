@@ -2,7 +2,7 @@
 
 import { Editor, Monaco } from "@monaco-editor/react";
 import { editor } from 'monaco-editor';
-import { useClerk } from "@clerk/nextjs";
+import { SignedIn, useClerk } from "@clerk/nextjs";
 import {
   DEFAULT_CODE_KEY_PREFIX,
   DEFAULT_EDITOR_FONT_SIZE,
@@ -21,13 +21,14 @@ import { EditorWidgetSkeleton } from "./EditorWidgetSkeleton";
 import ShareSnippetDialog from "./ShareSnippetDialog";
 import useMounted from "@/hooks/useMounted";
 import { DEFAULT_STYLE } from "../_constants/styleConfig";
+import RunButton from "./RunButton";
 
 export default function EditorWidget() {
   const clerk = useClerk();
   const mounted = useMounted();
   const editorRef = useRef<editor.IStandaloneCodeEditor>(null);
   const [isShareDialogOpened, setIsShareDialogOpened] = useState(false);
-  const { fontSize, language, theme, setFontSize, getLanguageImageSrc } = useCodeEditorStore();
+  const { fontSize, language, theme, setFontSize, getLanguageImageSrc, setCode } = useCodeEditorStore();
 
   useEffect(() => {
     const savedCode = localStorage.getItem(
@@ -38,6 +39,7 @@ export default function EditorWidget() {
     if (editorRef.current) {
       editorRef.current.setValue(currentCode);
     }
+    setCode(currentCode)
   }, [language, editorRef]);
 
   useEffect(() => {
@@ -123,6 +125,10 @@ export default function EditorWidget() {
             >
               <RotateCcwIcon className="size-4 text-gray-400" />
             </motion.button>
+
+            <SignedIn>
+                <RunButton />
+            </SignedIn>
 
             {/* Share Button */}
             <motion.button

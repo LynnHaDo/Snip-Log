@@ -135,3 +135,12 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
   };
 });
+
+export const getExecutionResult = () => {
+    let { code, output, error } = useCodeEditorStore.getState()
+    return {
+        code: code,
+        output: output,
+        error: error
+    }
+};

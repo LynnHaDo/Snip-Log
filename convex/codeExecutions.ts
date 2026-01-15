@@ -1,0 +1,49 @@
+import { ConvexError, v } from "convex/values";
+import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
+import { DEFAULT_LANGUAGE } from "@/constants/configs";
+import { Id } from "./_generated/dataModel";
+
+export const saveExecution = mutation({
+  args: {
+    language: v.string(),
+    code: v.string(),
+    output: v.optional(v.string()),
+    error: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
+    // Check pro status
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id")
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .first();
+
+    if (!user?.isPro && args.language !== DEFAULT_LANGUAGE) {
+      throw new ConvexError("Pro subscription required to use this language");
+    }
+
+    await ctx.db.insert("codeExecutions", {
+      ...args,
+      userId: user!._id
+    });
+  },
+});
+
+export const getUserExecutions = query({
+  args: {
+    userId: v.string(),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("codeExecutions")
+      .withIndex("by_user_id")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .order("desc")
+      .paginate(args.paginationOpts);
+  },
+});
