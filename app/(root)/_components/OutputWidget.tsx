@@ -33,14 +33,12 @@ export default function OutputWidget() {
           {isRunning ? (
             <OutputPanelSkeleton />
           ) : error ? (
-            <div className="flex items-start gap-3 text-red-400">
-              <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-1" />
-              <div className="space-y-1">
-                <div className="font-medium">Execution Error</div>
-                <pre className="whitespace-pre-wrap text-red-400/80">
-                  {error}
-                </pre>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-red-400 mb-3">
+                <AlertTriangle className="w-5 h-5" />
+                <span className="font-medium">Execution Error</span>
               </div>
+              <pre className="whitespace-pre-wrap text-red-400/80">{error}</pre>
             </div>
           ) : output ? (
             <div className="space-y-2">

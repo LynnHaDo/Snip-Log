@@ -56,11 +56,12 @@ export default function EditorWidget() {
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    if (value)
+    if (value && value !== "")
       localStorage.setItem(
         `${DEFAULT_CODE_KEY_PREFIX}-${language}`,
         value
       );
+      setCode(value!)
   };
 
   const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
