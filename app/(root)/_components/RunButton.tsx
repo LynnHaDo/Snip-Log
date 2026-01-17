@@ -34,14 +34,11 @@ function RunButton() {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`
-        group relative inline-flex items-center gap-2.5 px-5 py-2.5
+        inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-[#41BF9B] opacity-90 hover:opacity-100 transition-opacity
         disabled:cursor-not-allowed
         focus:outline-none
       `}
     >
-      {/* bg wit gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl opacity-100 transition-opacity group-hover:opacity-90" />
-
       <div className="relative flex items-center gap-2.5">
         {isRunning ? (
           <>
