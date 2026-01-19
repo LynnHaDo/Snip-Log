@@ -89,13 +89,99 @@ export const getStarredSnippets = query({
     const stars = await context.db
       .query("stars")
       .withIndex("by_user_id")
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .collect();
+
+    const snippets = await Promise.all(
+      stars.map((star) => context.db.get(star.snippetId)),
+    );
+    return snippets.filter((snippet) => !!snippet);
+  },
+});
+
+export const deleteSnippet = mutation({
+  args: {
+    snippetId: v.id("snippets"),
+  },
+  handler: async (context, args) => {
+    const identity = await context.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("User is not authenticated");
+    }
+
+    const snippet = await context.db.get(args.snippetId);
+
+    if (!snippet) {
+      throw new Error("Snippet is not found");
+    }
+
+    if (snippet.userId !== identity.subject) {
+      throw new Error("User is not authorized to delete this snippet");
+    }
+
+    const comments = await context.db
+      .query("snippetComments")
+      .withIndex("by_snippet_id")
+      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .collect();
+
+    for (const comment of comments) {
+      await context.db.delete(comment._id);
+    }
+
+    const stars = await context.db
+      .query("stars")
+      .withIndex("by_snippet_id")
+      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .collect();
+
+    for (const star of stars) {
+      await context.db.delete(star._id);
+    }
+
+    await context.db.delete(args.snippetId);
+  },
+});
+
+export const starSnippet = mutation({
+  args: {
+    snippetId: v.id("snippets"),
+  },
+  handler: async (context, args) => {
+    const identity = await context.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("User is not authenticated");
+    }
+
+    const snippet = await context.db.get(args.snippetId);
+
+    if (!snippet) {
+      throw new Error("Snippet is not found");
+    }
+
+    if (snippet.userId !== identity.subject) {
+      throw new Error("User is not authorized to star this snippet");
+    }
+
+    const existingStar = await context.db
+      .query("stars")
+      .withIndex("by_user_id_and_snippet_id")
       .filter(
         (q) =>
-          q.eq(q.field("userId"), identity.subject)
+          q.eq(q.field("userId"), identity.subject) &&
+          q.eq(q.field("snippetId"), args.snippetId),
       )
-      .collect();
-    
-    const snippets = await Promise.all(stars.map(star => context.db.get(star.snippetId)))
-    return snippets.filter(snippet => !!snippet)
+      .first();
+
+    if (existingStar) {
+      await context.db.delete(existingStar._id);
+    } else {
+      await context.db.insert("stars", {
+        userId: snippet.userId,
+        snippetId: snippet._id,
+      });
+    }
   },
 });
