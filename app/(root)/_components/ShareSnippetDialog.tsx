@@ -9,32 +9,30 @@ import { DEFAULT_STYLE } from "../_constants/styleConfig";
 function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState("");
   const [isSharing, setIsSharing] = useState(false);
-  const { fontSize, theme, language, setCode } = useCodeEditorStore();
-  //const createSnippet = useMutation(api.snippets.createSnippet);
+  const { fontSize, theme, language, code } = useCodeEditorStore();
+  const createSnippet = useMutation(api.snippets.createSnippet);
 
   const handleShare = async (e: React.FormEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
 
-    // setIsSharing(true);
+    setIsSharing(true);
 
-    // try {
-    //   const code = getCode();
-    //   const language = configs.language;
-    //   await createSnippet({ title, language, code });
-    //   onClose();
-    //   setTitle("");
-    //   toast.success("Snippet shared successfully");
-    // } catch (error) {
-    //   console.log("Error creating snippet:", error);
-    //   toast.error("Error creating snippet");
-    // } finally {
-    //   setIsSharing(false);
-    // }
+    try {
+      await createSnippet({ title, language, code });
+      onClose();
+      setTitle("");
+      toast.success("Snippet shared successfully");
+    } catch (error) {
+      console.log("Error creating snippet:", error);
+      toast.error("Error creating snippet");
+    } finally {
+      setIsSharing(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className={`bg-[${DEFAULT_STYLE.backgroundColorLight}] rounded-lg p-6 w-full max-w-md`}>
+      <div className={`bg-[#012840] rounded-lg p-6 w-full max-w-md`}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-white">Share Snippet</h2>
           <button
@@ -58,7 +56,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 bg-[#181825] border border-[#313244] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-[#011C26] rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-[#41BF9B]-200"
               placeholder="Enter snippet title"
               required
             />
@@ -75,7 +73,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={isSharing}
-              className={`px-4 py-2 bg-[${DEFAULT_STYLE.logoTextColor}]/90 text-white rounded-lg hover:bg-bg-[${DEFAULT_STYLE.logoTextColor}] 
+              className={`px-4 py-2 bg-[#41BF9B]/90 text-white rounded-lg hover:bg-bg-[#41BF9B] 
               disabled:opacity-50`}
             >
               {isSharing ? "Sharing..." : "Share"}
