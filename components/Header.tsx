@@ -1,4 +1,4 @@
-import { METADATA } from "../_constants/editorConfig";
+import { METADATA } from "../app/(root)/_constants/editorConfig";
 import Logo from "@/components/Logo";
 import { api } from "@/convex/_generated/api";
 import { currentUser } from "@clerk/nextjs/server";
@@ -6,10 +6,10 @@ import { ConvexHttpClient } from "convex/browser";
 import { Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
-import HeaderProfileBtn from "./HeaderProfileBtn";
-import LanguageSelector from "./LanguageSelector";
-import ThemeSelector from "./ThemeSelector";
-import NavItem from "./NavItem";
+import HeaderProfileBtn from "../app/(root)/_components/HeaderProfileBtn";
+import LanguageSelector from "../app/(root)/_components/LanguageSelector";
+import ThemeSelector from "../app/(root)/_components/ThemeSelector";
+import NavItem from "../app/(root)/_components/NavItem";
 
 async function Header() {
   const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -20,10 +20,10 @@ async function Header() {
   });
 
   return (
-    <div className="relative z-10">
+    <div className="relative z-11">
       <div
         className="flex items-center lg:justify-between 
-                            justify-center backdrop-blur-xl py-6 mb-4 rounded-lg"
+                            justify-center py-6 mb-4 rounded-lg"
       >
         <div className="hidden lg:flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 group relative">
