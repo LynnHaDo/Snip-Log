@@ -1,0 +1,1 @@
+export const MAX_SNIPPETS_TO_LOAD = 10;

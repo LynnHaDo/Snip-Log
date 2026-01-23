@@ -1,23 +1,14 @@
 import { METADATA } from "../app/(root)/_constants/editorConfig";
 import Logo from "@/components/Logo";
-import { api } from "@/convex/_generated/api";
-import { currentUser } from "@clerk/nextjs/server";
-import { ConvexHttpClient } from "convex/browser";
-import { Code2, Sparkles } from "lucide-react";
+import useUserSubscriptionStatus from '@/hooks/useUserSubscriptionStatus'
+import { BadgeDollarSign, Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import HeaderProfileBtn from "../app/(root)/_components/HeaderProfileBtn";
-import LanguageSelector from "../app/(root)/_components/LanguageSelector";
-import ThemeSelector from "../app/(root)/_components/ThemeSelector";
 import NavItem from "../app/(root)/_components/NavItem";
 
 async function Header() {
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const user = await currentUser();
-
-  const convexUser = await convex.query(api.users.getUser, {
-    userId: user?.id || "",
-  });
+  const isUserPro = useUserSubscriptionStatus()
 
   return (
     <div className="relative z-11">
@@ -52,27 +43,24 @@ async function Header() {
                 <Code2 className="w-4 h-4 text-[#41BF9B]-400 hover:text-[#41BF9B]-300" />
               }
             />
+            <NavItem
+              href="/pricing"
+              title="Pricing"
+              icon={
+                <BadgeDollarSign className="w-4 h-4 text-amber-400 hover:text-amber-300" />
+              }
+            />
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
-            <ThemeSelector />
-            <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
-          </div>
-
-          {!convexUser?.isPro && (
-            <Link
-              href="/pricing"
-              className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
-                            to-orange-500/10 hover:from-amber-500/20 hover:to-orange-500/20 
-                            transition-all duration-300"
-            >
+          {!!isUserPro && (
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 bg-gradient-to-r">
               <Sparkles className="w-4 h-4 text-amber-400 hover:text-amber-300" />
               <span className="text-sm font-medium text-amber-400/90 hover:text-amber-300">
                 Pro
               </span>
-            </Link>
+            </div>
           )}
 
           <div className="pl-3 border-l border-gray-800">

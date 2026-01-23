@@ -26,7 +26,15 @@ export default defineSchema({
         title: v.string(),
         language: v.string(),
         code: v.string(),
-    }).index("by_user_id", ["userId"]),
+        searchMetadata: v.string()
+    })
+    .index("by_user_id", ["userId"])
+    .index("by_language", ['language'])
+    .searchIndex('search_all', {
+        searchField: 'searchMetadata',
+        filterFields: ['language']
+    }),
+    
 
     snippetComments: defineTable({
         snippetId: v.id("snippets"),
@@ -41,5 +49,10 @@ export default defineSchema({
     })
     .index("by_user_id", ["userId"])
     .index("by_snippet_id", ["snippetId"])
-    .index("by_user_id_and_snippet_id", ["userId", "snippetId"])
+    .index("by_user_id_and_snippet_id", ["userId", "snippetId"]),
+
+    languageStats: defineTable({
+        language: v.string(),
+        count: v.number(),
+    }).index("by_count", ['count'])
 })

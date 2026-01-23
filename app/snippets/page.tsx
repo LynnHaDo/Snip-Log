@@ -1,39 +1,46 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
 import SnippetCard from "./_components/SnippetCard";
+import { MAX_SNIPPETS_TO_LOAD } from "./_constants/snippetsConfig";
 
 export default function Snippets() {
-  const snippets = useQuery(api.snippets.getSnippets);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+    const { results, status, loadMore } = usePaginatedQuery(
+    api.snippets.getSnippets,
+    {
+        keyword: searchQuery || undefined,
+        language: selectedLanguage || undefined
+    },
+    { initialNumItems: MAX_SNIPPETS_TO_LOAD },
+  );
   const [view, setView] = useState<"grid" | "list">("grid");
+  const pageBottomRef = useRef(null);
 
-  // loading state
-  if (snippets === undefined) {
-    return <SnippetsPageSkeleton />;
-  }
+  const popularLanguages = useQuery(api.snippets.getTopFiveLanguages);
+  const filteredSnippets = results
 
-  const languages = [...new Set(snippets.map((s) => s.language))];
-  const popularLanguages = languages.slice(0, 5);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && status === "CanLoadMore") {
+          loadMore(MAX_SNIPPETS_TO_LOAD); // Load the next 12 items
+        }
+      },
+      { threshold: 1.0 },
+    );
 
-  const filteredSnippets = snippets.filter((snippet) => {
-    const matchesSearch =
-      snippet.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      snippet.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      snippet.userName.toLowerCase().includes(searchQuery.toLowerCase());
+    if (pageBottomRef.current) observer.observe(pageBottomRef.current);
 
-    const matchesLanguage =
-      !selectedLanguage || snippet.language === selectedLanguage;
-
-    return matchesSearch && matchesLanguage;
-  });
+    return () => observer.disconnect();
+  }, [status, loadMore]);
 
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-12">
@@ -92,31 +99,37 @@ export default function Snippets() {
             <span className="text-sm text-gray-400">Languages:</span>
           </div>
 
-          {popularLanguages.map((lang) => (
-            <button
-              key={lang}
-              onClick={() =>
-                setSelectedLanguage(lang === selectedLanguage ? null : lang)
-              }
-              className={`
+          {popularLanguages && (
+            <>
+              {popularLanguages.map(({ language }) => (
+                <button
+                  key={language}
+                  onClick={() =>
+                    setSelectedLanguage(
+                      language === selectedLanguage ? null : language,
+                    )
+                  }
+                  className={`
                     group relative px-3 py-1.5 rounded-lg transition-all duration-200
                     ${
-                      selectedLanguage === lang
+                      selectedLanguage === language
                         ? "text-blue-400 bg-blue-500/10 ring-2 ring-blue-500/50"
                         : "text-gray-400 hover:text-gray-300 bg-[#1e1e2e] hover:bg-[#262637] ring-1 ring-gray-800"
                     }
                   `}
-            >
-              <div className="flex items-center gap-2">
-                <img
-                  src={`/${lang}.png`}
-                  alt={lang}
-                  className="w-4 h-4 object-contain"
-                />
-                <span className="text-sm">{lang}</span>
-              </div>
-            </button>
-          ))}
+                >
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={`/${language}.png`}
+                      alt={language}
+                      className="w-4 h-4 object-contain"
+                    />
+                    <span className="text-sm">{language}</span>
+                  </div>
+                </button>
+              ))}
+            </>
+          )}
 
           {selectedLanguage && (
             <button
@@ -215,6 +228,10 @@ export default function Snippets() {
           </div>
         </motion.div>
       )}
+
+      <div ref={pageBottomRef} className="h-10 w-full flex justify-center items-center">
+        {status == 'LoadingMore' && <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500" />}
+      </div>
     </div>
   );
 }

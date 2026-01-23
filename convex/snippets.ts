@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
 
 export const createSnippet = mutation({
   args: {
@@ -28,16 +29,62 @@ export const createSnippet = mutation({
       ...args,
       userId: user._id,
       userName: user.name,
+      searchMetadata: `${args.title.toLocaleLowerCase()} ${user.name.toLocaleLowerCase()}`,
     });
+
+    // Update language stats
+    const exisitingStat = await context.db
+      .query("languageStats")
+      .filter((q) => q.eq(q.field("language"), args.language))
+      .unique();
+
+    if (exisitingStat) {
+      await context.db.patch(exisitingStat._id, {
+        count: exisitingStat.count + 1,
+      });
+    } else {
+      await context.db.insert("languageStats", {
+        language: args.language,
+        count: 1,
+      });
+    }
 
     return snippetId;
   },
 });
 
 export const getSnippets = query({
-  handler: async (context) => {
-    const snippets = await context.db.query("snippets").order("desc").collect();
-    return snippets;
+  args: {
+    paginationOpts: paginationOptsValidator,
+    keyword: v.optional(v.string()),
+    language: v.optional(v.string()),
+  },
+  handler: async (context, args) => {
+    if (args.keyword && args.keyword !== "") {
+      const lowerCasedSearch = args.keyword.toLowerCase();
+      return await context.db
+        .query("snippets")
+        .withSearchIndex("search_all", (q) => {
+          const searchResult = q.search("searchMetadata", lowerCasedSearch);
+          return args.language
+            ? searchResult.eq("language", args.language)
+            : searchResult;
+        })
+        .paginate(args.paginationOpts);
+    }
+
+    if (args.language) {
+      return await context.db
+        .query("snippets")
+        .withIndex("by_language", (q) => q.eq("language", args.language!))
+        .order("desc")
+        .paginate(args.paginationOpts);
+    }
+
+    return await context.db
+      .query("snippets")
+      .order("desc")
+      .paginate(args.paginationOpts);
   },
 });
 
@@ -76,6 +123,17 @@ export const getSnippetStarCount = query({
       .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
       .collect();
     return stars.length;
+  },
+});
+
+export const getTopFiveLanguages = query({
+  handler: async (context) => {
+    const topFiveLanguages = await context.db
+      .query("languageStats")
+      .withIndex("by_count")
+      .order("desc")
+      .take(5);
+    return topFiveLanguages;
   },
 });
 
@@ -138,6 +196,22 @@ export const deleteSnippet = mutation({
 
     for (const star of stars) {
       await context.db.delete(star._id);
+    }
+
+    // Update language stats
+    const exisitingStat = await context.db
+      .query("languageStats")
+      .filter((q) => q.eq(q.field("language"), snippet.language))
+      .unique();
+
+    if (exisitingStat) {
+      if (exisitingStat.count > 2) {
+        await context.db.patch(exisitingStat._id, {
+          count: exisitingStat.count - 1,
+        });
+      } else {
+        await context.db.delete(exisitingStat._id);
+      }
     }
 
     await context.db.delete(args.snippetId);
