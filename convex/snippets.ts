@@ -1,5 +1,10 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import {
+  mutation,
+  query,
+  internalMutation,
+  internalQuery,
+} from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
 
 export const createSnippet = mutation({
@@ -257,5 +262,33 @@ export const starSnippet = mutation({
         snippetId: snippet._id,
       });
     }
+  },
+});
+
+// Mutation handlers
+export const backfillSearchMetadata = internalMutation({
+  args: {
+    updates: v.array(
+      v.object({
+        id: v.id("snippets"),
+        metadata: v.string(),
+      }),
+    ),
+  },
+  handler: async (context, args) => {
+    for (const update of args.updates) {
+      await context.db.patch(update.id, {
+        searchMetadata: update.metadata,
+      });
+    }
+  },
+});
+
+export const getUnprocessedSnippets = internalQuery({
+  handler: async (context) => {
+    return await context.db
+      .query("snippets")
+      .filter((q) => q.eq(q.field("searchMetadata"), undefined))
+      .take(50);
   },
 });
