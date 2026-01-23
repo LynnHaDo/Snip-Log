@@ -15,7 +15,7 @@ export default function Snippets() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
-    const { results, status, loadMore } = usePaginatedQuery(
+  const { results, status, loadMore } = usePaginatedQuery(
     api.snippets.getSnippets,
     {
         keyword: debouncedSearchQuery || undefined,
@@ -44,6 +44,10 @@ export default function Snippets() {
     return () => observer.disconnect();
   }, [status, loadMore]);
 
+  if (status == 'LoadingFirstPage') {
+    return <SnippetsPageSkeleton />
+  }
+
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-12">
       {/* Hero */}
@@ -52,7 +56,7 @@ export default function Snippets() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r
-             from-highlight-500/10 to-purple-500/10 text-sm text-gray-400 mb-6"
+             from-light to-purple-500/10 text-sm text-gray-400 mb-6"
         >
           <BookOpen className="w-4 h-4" />
           {METADATA.label}
@@ -79,17 +83,17 @@ export default function Snippets() {
       <div className="relative max-w-5xl mx-auto mb-12 space-y-6">
         {/* Search */}
         <div className="relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-highlight-500/20 to-purple-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-r from-highlight/20 to-purple-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
           <div className="relative flex items-center">
             <Search className="absolute left-4 w-5 h-5 text-gray-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search snippets by title, language, or author..."
-              className="w-full pl-12 pr-4 py-4 bg-[#1e1e2e]/80 hover:bg-[#1e1e2e] text-white
+              placeholder="Search snippets by title or author..."
+              className="w-full pl-12 pr-4 py-4 bg-light/80 hover:bg-[#1e1e2e] text-white
                   rounded-xl border border-[#313244] hover:border-[#414155] transition-all duration-200
-                  placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-highlight-500/50"
+                  placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-highlight/50"
             />
           </div>
         </div>
@@ -115,7 +119,7 @@ export default function Snippets() {
                     group relative px-3 py-1.5 rounded-lg transition-all duration-200
                     ${
                       selectedLanguage === language
-                        ? "text-highlight-400 bg-highlight-500/10 ring-2 ring-highlight-500/50"
+                        ? "text-highlight-400 bg-highlight/10 ring-1 ring-highlight/50"
                         : "text-gray-400 hover:text-gray-300 bg-[#1e1e2e] hover:bg-[#262637] ring-1 ring-gray-800"
                     }
                   `}

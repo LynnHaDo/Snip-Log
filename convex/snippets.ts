@@ -240,10 +240,6 @@ export const starSnippet = mutation({
       throw new Error("Snippet is not found");
     }
 
-    if (snippet.userId !== identity.subject) {
-      throw new Error("User is not authorized to star this snippet");
-    }
-
     const existingStar = await context.db
       .query("stars")
       .withIndex("by_user_id_and_snippet_id")
