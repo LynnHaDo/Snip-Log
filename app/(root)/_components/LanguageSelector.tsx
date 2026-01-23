@@ -8,7 +8,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { DEFAULT_LANGUAGE } from "../_constants/editorConfig";
 import { ChevronDownIcon, Lock, Sparkles } from "lucide-react";
 import Image from "next/image";
-import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 interface LanguageSelectorProps {
     hasAccess: boolean

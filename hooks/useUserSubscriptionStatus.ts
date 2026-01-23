@@ -1,16 +1,18 @@
+"use client";
+
 import { api } from "@/convex/_generated/api";
-import { currentUser } from "@clerk/nextjs/server";
-import { ConvexHttpClient } from "convex/browser";
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
 
-const useUserSubscriptionStatus = async () => {
-  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const user = await currentUser();
+export default function useUserSubscriptionStatus() {
+    const { user, isLoaded: isClerkLoaded } = useUser();
+    const convexUser = useQuery(
+        api.users.getUser,
+        user?.id ? { userId: user.id } : 'skip'
+    )
 
-  const convexUser = await convex.query(api.users.getUser, {
-    userId: user?.id || "",
-  });
+    const isLoaded = isClerkLoaded && convexUser !== undefined
+    const isPro = !!convexUser?.isPro
 
-  return convexUser?.isPro
-};
-
-export default useUserSubscriptionStatus;
+    return { isPro, isLoaded }
+}

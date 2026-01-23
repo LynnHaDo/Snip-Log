@@ -1,6 +1,6 @@
 import { METADATA } from "../app/(root)/_constants/editorConfig";
 import Logo from "@/components/Logo";
-import useUserSubscriptionStatus from '@/hooks/useUserSubscriptionStatus'
+import { getSubscriptionStatus } from '@/lib/getSubscriptionStatus'
 import { BadgeDollarSign, Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -8,7 +8,7 @@ import HeaderProfileBtn from "../app/(root)/_components/HeaderProfileBtn";
 import NavItem from "../app/(root)/_components/NavItem";
 
 async function Header() {
-  const isUserPro = useUserSubscriptionStatus()
+  const isPro = await getSubscriptionStatus()
 
   return (
     <div className="relative z-11">
@@ -54,7 +54,7 @@ async function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          {!!isUserPro && (
+          {isPro && (
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 bg-gradient-to-r">
               <Sparkles className="w-4 h-4 text-amber-400 hover:text-amber-300" />
               <span className="text-sm font-medium text-amber-400/90 hover:text-amber-300">
@@ -63,7 +63,7 @@ async function Header() {
             </div>
           )}
 
-          <div className="pl-3 border-l border-gray-800">
+          <div className="pl-3 border-gray-800">
             <HeaderProfileBtn />
           </div>
         </div>
