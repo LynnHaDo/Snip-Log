@@ -43,6 +43,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     isRunning: false,
     error: null,
     code: "",
+    isShareCodeSnippetDialogOpened: false,
 
     setCode: (code: string) => {
       localStorage.setItem(
@@ -84,6 +85,12 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       set({
         fontSize: newFontSize,
       });
+    },
+
+    setIsShareCodeSnippetDialogOpened: (status: boolean) => {
+        set({
+            isShareCodeSnippetDialogOpened: status
+        })
     },
 
     getLanguageImageSrc: () => {

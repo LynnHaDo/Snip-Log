@@ -34,7 +34,7 @@ function RunButton() {
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={`
-        inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-[#41BF9B] opacity-90 hover:opacity-100 transition-opacity
+        inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-highlight opacity-90 hover:opacity-100 transition-opacity
         disabled:cursor-not-allowed
         focus:outline-none
       `}

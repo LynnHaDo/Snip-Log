@@ -1,8 +1,8 @@
 "use client";
 
 import { Editor, Monaco } from "@monaco-editor/react";
-import { editor } from 'monaco-editor';
-import { SignedIn, useClerk } from "@clerk/nextjs";
+import { editor } from "monaco-editor";
+import { useClerk } from "@clerk/nextjs";
 import {
   DEFAULT_CODE_KEY_PREFIX,
   DEFAULT_EDITOR_FONT_SIZE,
@@ -14,38 +14,46 @@ import { LANGUAGES_CONFIGS } from "../_constants/languageConfig";
 import { useEffect, useRef, useState } from "react";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import Image from "next/image";
-import { RotateCcwIcon, ShareIcon, TypeIcon } from "lucide-react";
-import { motion } from "motion/react";
 import { defineMonacoThemes } from "../_constants/themeConfig";
 import { EditorWidgetSkeleton } from "./EditorWidgetSkeleton";
 import ShareSnippetDialog from "./ShareSnippetDialog";
 import useMounted from "@/hooks/useMounted";
 import { DEFAULT_STYLE } from "../_constants/styleConfig";
-import RunButton from "./RunButton";
+import { motion } from "motion/react";
+import { RotateCcwIcon, TypeIcon } from "lucide-react";
 
 export default function EditorWidget() {
   const clerk = useClerk();
   const mounted = useMounted();
   const editorRef = useRef<editor.IStandaloneCodeEditor>(null);
-  const [isShareDialogOpened, setIsShareDialogOpened] = useState(false);
-  const { fontSize, language, theme, setFontSize, getLanguageImageSrc, setCode } = useCodeEditorStore();
+  const {
+    fontSize,
+    language,
+    theme,
+    setFontSize,
+    getLanguageImageSrc,
+    setCode,
+    isShareCodeSnippetDialogOpened,
+    setIsShareCodeSnippetDialogOpened
+  } = useCodeEditorStore();
 
   useEffect(() => {
     const savedCode = localStorage.getItem(
-      `${DEFAULT_CODE_KEY_PREFIX}-${language || DEFAULT_LANGUAGE}`
+      `${DEFAULT_CODE_KEY_PREFIX}-${language || DEFAULT_LANGUAGE}`,
     );
-    const currentCode =
-      savedCode || LANGUAGES_CONFIGS[language].defaultCode;
+    const currentCode = savedCode || LANGUAGES_CONFIGS[language].defaultCode;
     if (editorRef.current) {
       editorRef.current.setValue(currentCode);
     }
-    setCode(currentCode)
+    setCode(currentCode);
   }, [language, editorRef]);
 
   useEffect(() => {
     const savedFontSize = localStorage.getItem(DEFAULT_EDITOR_FONT_SIZE_KEY);
     setFontSize(
-      savedFontSize != null ? parseInt(savedFontSize) : DEFAULT_EDITOR_FONT_SIZE
+      savedFontSize != null
+        ? parseInt(savedFontSize)
+        : DEFAULT_EDITOR_FONT_SIZE,
     );
   }, [fontSize]);
 
@@ -57,14 +65,14 @@ export default function EditorWidget() {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value && value !== "")
-      localStorage.setItem(
-        `${DEFAULT_CODE_KEY_PREFIX}-${language}`,
-        value
-      );
-      setCode(value!)
+      localStorage.setItem(`${DEFAULT_CODE_KEY_PREFIX}-${language}`, value);
+    setCode(value!);
   };
 
-  const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor, monaco: Monaco) => {
+  const handleEditorDidMount = (
+    editor: editor.IStandaloneCodeEditor,
+    monaco: Monaco,
+  ) => {
     editorRef.current = editor;
   };
 
@@ -77,11 +85,15 @@ export default function EditorWidget() {
 
   return (
     <div className="relative">
-      <div className={`relative bg-[${DEFAULT_STYLE.backgroundColor}]/90 backdrop-blur rounded-xl border border-white/[0.05] p-6`}>
+      <div
+        className={`relative bg-dark/90 backdrop-blur rounded-xl border border-white/[0.05] p-6`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`flex items-center justify-center w-8 h-8 rounded-lg bg-[${DEFAULT_STYLE.backgroundColorLight}] ring-1 ring-white/5`}>
+            <div
+              className={`flex items-center justify-center w-8 h-8 rounded-lg bg-dark ring-1 ring-white/5`}
+            >
               <Image
                 src={getLanguageImageSrc()}
                 alt="Logo"
@@ -96,9 +108,12 @@ export default function EditorWidget() {
               </p>
             </div>
           </div>
+
           <div className="flex items-center gap-3">
             {/* Font Size Slider */}
-            <div className={`flex items-center gap-3 px-3 py-2 bg-[${DEFAULT_STYLE.backgroundColorLight}] rounded-lg ring-1 ring-white/5`}>
+            <div
+              className={`flex items-center gap-3 px-3 py-2 bg-dark rounded-lg ring-1 ring-white/5`}
+            >
               <TypeIcon className="size-4 text-gray-400" />
               <div className="flex items-center gap-3">
                 <input
@@ -121,33 +136,18 @@ export default function EditorWidget() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleRefresh}
-              className={`p-2 bg-[${DEFAULT_STYLE.backgroundColorLight}] hover:bg-[#2a2a3a] rounded-lg ring-1 ring-white/5 transition-colors`}
+              className={`px-3 py-2.5 bg-dark hover:bg-light rounded-lg ring-1 ring-white/5 transition-colors`}
               aria-label="Reset to default code"
             >
               <RotateCcwIcon className="size-4 text-gray-400" />
             </motion.button>
-
-            <SignedIn>
-                <RunButton />
-
-                {/* Share Button */}
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setIsShareDialogOpened(true)}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg overflow-hidden bg-[#41BF9B] opacity-90 hover:opacity-100 transition-opacity`}
-                    >
-                    <ShareIcon className="size-4 text-white" />
-                    <span className="text-sm font-medium text-white">Share</span>
-                </motion.button>
-            </SignedIn>
           </div>
         </div>
 
         {/* Editor  */}
         <div className="relative group rounded-xl overflow-hidden ring-1 ring-white/[0.05]">
           {clerk.loaded ? (
-            <Editor 
+            <Editor
               height="600px"
               language={LANGUAGES_CONFIGS[language].monacoLanguage}
               onChange={handleEditorChange}
@@ -156,7 +156,7 @@ export default function EditorWidget() {
               onMount={handleEditorDidMount}
               options={{
                 fontSize: fontSize,
-                ...DEFAULT_MONACO_CODE_CONFIGS
+                ...DEFAULT_MONACO_CODE_CONFIGS,
               }}
             />
           ) : (
@@ -164,8 +164,8 @@ export default function EditorWidget() {
           )}
         </div>
       </div>
-      {isShareDialogOpened && (
-        <ShareSnippetDialog onClose={() => setIsShareDialogOpened(false)} />
+      {isShareCodeSnippetDialogOpened && (
+        <ShareSnippetDialog onClose={() => setIsShareCodeSnippetDialogOpened(false)} />
       )}
     </div>
   );

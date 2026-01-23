@@ -40,7 +40,7 @@ async function Header() {
               href="/snippets"
               title="Snippets"
               icon={
-                <Code2 className="w-4 h-4 text-[#41BF9B]-400 hover:text-[#41BF9B]-300" />
+                <Code2 className="w-4 h-4 text-highlight-400 hover:text-highlight-300" />
               }
             />
             <NavItem

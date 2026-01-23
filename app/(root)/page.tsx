@@ -4,10 +4,12 @@ import OutputWidget from "./_components/OutputWidget";
 
 export default function Home() {
   return (
-    <div className="d-flex flex-column">
-        <ControlWidget />
-      <EditorWidget />
-      <OutputWidget />
+    <div className="grid justify-items-center w-full">
+      <ControlWidget />
+      <div className="grid grid-cols-1 md:grid-cols-2 py-4 gap-3">
+        <EditorWidget />
+        <OutputWidget />
+      </div>
     </div>
   );
 }

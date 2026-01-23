@@ -56,7 +56,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 bg-[#011C26] rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-[#41BF9B]-200"
+              className="w-full px-3 py-2 bg-dark rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-highlight-200"
               placeholder="Enter snippet title"
               required
             />
@@ -73,7 +73,7 @@ function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={isSharing}
-              className={`px-4 py-2 bg-[#41BF9B]/90 text-white rounded-lg hover:bg-bg-[#41BF9B] 
+              className={`px-4 py-2 bg-highlight/90 text-white rounded-lg hover:bg-bg-highlight 
               disabled:opacity-50`}
             >
               {isSharing ? "Sharing..." : "Share"}

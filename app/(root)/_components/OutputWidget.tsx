@@ -13,11 +13,11 @@ export default function OutputWidget() {
   if (!mounted) return null;
 
   return (
-    <div className={`relative bg-[${DEFAULT_STYLE.backgroundColor}]/90 backdrop-blur rounded-xl border border-white/[0.05] p-6`}>
+    <div className={`relative bg-dark/90 backdrop-blur rounded-xl border border-white/[0.05] p-6`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className={`flex items-center justify-center w-8 h-8 rounded-lg bg-[${DEFAULT_STYLE.backgroundColorLight}] ring-1 ring-white/5`}>
+          <div className={`flex items-center justify-center w-8 h-8 rounded-lg bg-light ring-1 ring-white/5`}>
             <Terminal className={`w-4 h-4 text-logo`}/>
           </div>
           <span className="text-sm font-medium text-gray-300">Output</span>
