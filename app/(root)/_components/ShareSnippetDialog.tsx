@@ -4,12 +4,11 @@ import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { X } from "lucide-react";
 import toast from "react-hot-toast";
-import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 function ShareSnippetDialog({ onClose }: { onClose: () => void }) {
   const [title, setTitle] = useState("");
   const [isSharing, setIsSharing] = useState(false);
-  const { fontSize, theme, language, code } = useCodeEditorStore();
+  const { language, code } = useCodeEditorStore();
   const createSnippet = useMutation(api.snippets.createSnippet);
 
   const handleShare = async (e: React.FormEvent) => {

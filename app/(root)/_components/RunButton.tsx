@@ -6,13 +6,21 @@ import { useMutation } from "convex/react";
 import { motion } from "framer-motion";
 import { Loader2, Play } from "lucide-react";
 import { api } from "@/convex/_generated/api";
+import toast from "react-hot-toast";
+import useUserSubscriptionStatus from "@/hooks/useUserSubscriptionStatus";
 
 function RunButton() {
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
   const { runCode, language, isRunning } = useCodeEditorStore();
   const saveExecution = useMutation(api.codeExecutions.saveExecution);
 
   const handleRun = async () => {
+    if (!isSignedIn) {
+        toast.error("Please sign in to run your code.")
+        console.log("Please sign in to run your code.")
+        return;
+    }
+
     await runCode();
     const result = getExecutionResult();
     console.log(result)

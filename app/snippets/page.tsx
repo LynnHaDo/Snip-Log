@@ -9,14 +9,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
 import SnippetCard from "./_components/SnippetCard";
 import { MAX_SNIPPETS_TO_LOAD, METADATA } from "./_constants/snippetsConfig";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function Snippets() {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
     const { results, status, loadMore } = usePaginatedQuery(
     api.snippets.getSnippets,
     {
-        keyword: searchQuery || undefined,
+        keyword: debouncedSearchQuery || undefined,
         language: selectedLanguage || undefined
     },
     { initialNumItems: MAX_SNIPPETS_TO_LOAD },

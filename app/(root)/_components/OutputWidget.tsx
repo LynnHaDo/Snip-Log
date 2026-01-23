@@ -4,7 +4,6 @@ import useMounted from "@/hooks/useMounted";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import { AlertTriangle, CheckCircle, Clock, Terminal } from "lucide-react";
 import { OutputPanelSkeleton } from "./EditorWidgetSkeleton";
-import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 export default function OutputWidget() {
   const mounted = useMounted();

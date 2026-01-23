@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import { IoLogoGithub } from "react-icons/io";
 import { THEMES } from "../_constants/themeConfig";
 import { AnimatePresence, motion } from "motion/react";
-import { DEFAULT_STYLE } from "../_constants/styleConfig";
 
 const THEME_ICONS: Record<string, React.ReactNode> = {
   "vs-dark": <Moon className="size-4" />,
