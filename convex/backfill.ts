@@ -27,3 +27,10 @@ export const runSearchMetadataBackFill = action({
         return `Successfully backfilled ${processed} snippets.`;
     }
 })
+
+export const runLanguageStatBackFill = action({
+    handler: async (context) => {
+        await context.runMutation(internal.snippets.backfillTopLanguages)
+        return `Successfully backfilled top languages stats.`
+    },
+})

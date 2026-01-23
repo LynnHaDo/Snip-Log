@@ -292,3 +292,27 @@ export const getUnprocessedSnippets = internalQuery({
       .take(50);
   },
 });
+
+export const backfillTopLanguages = internalMutation({
+  handler: async (context) => {
+    const snippets = await context.db.query("snippets").collect();
+
+    for (const snippet of snippets) {
+      const exisitingStat = await context.db
+        .query("languageStats")
+        .filter((q) => q.eq(q.field("language"), snippet.language))
+        .unique();
+
+      if (exisitingStat) {
+        await context.db.patch(exisitingStat._id, {
+          count: exisitingStat.count + 1,
+        });
+      } else {
+        await context.db.insert("languageStats", {
+          language: snippet.language,
+          count: 1,
+        });
+      }
+    }
+  },
+});
