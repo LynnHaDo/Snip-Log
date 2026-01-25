@@ -11,7 +11,7 @@ import {
   DEFAULT_MONACO_CODE_CONFIGS,
 } from "../_constants/editorConfig";
 import { LANGUAGES_CONFIGS } from "../_constants/languageConfig";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import Image from "next/image";
 import { defineMonacoThemes } from "../_constants/themeConfig";

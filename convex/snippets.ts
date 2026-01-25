@@ -6,6 +6,7 @@ import {
   internalQuery,
 } from "./_generated/server";
 import { paginationOptsValidator } from "convex/server";
+import { Id } from "./_generated/dataModel";
 
 export const createSnippet = mutation({
   args: {
@@ -260,6 +261,99 @@ export const starSnippet = mutation({
     }
   },
 });
+
+export const getSnippetById = query({
+    args: {
+        snippetId: v.id("snippets")
+    },
+    handler: async (context, args) => {
+        const snippet = await context.db.get(args.snippetId)
+
+        if (!snippet) {
+            throw new Error("Snippet not found")
+        }
+        
+        return snippet
+    }
+})
+
+export const getComments = query({
+    args: {
+        snippetId: v.id("snippets")
+    },
+    handler: async (context, args) => {
+        const comments = await context.db.query('snippetComments').withIndex('by_snippet_id')
+                                    .filter(q => q.eq(q.field('snippetId'), args.snippetId))
+                                    .order('desc')
+                                    .collect()
+        
+        return comments
+    }
+})
+
+export const addComment = mutation({
+    args: {
+        snippetId: v.id('snippets'),
+        content: v.string()
+    },
+    handler: async (context, args) => {
+        if (args.content === "") {
+            throw new Error("Comment cannot be empty.")
+        }
+
+        const identity = await context.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("User is not authenticated");
+        }
+
+        const user = await context.db.query('users').withIndex('by_user_id').filter(q => q.eq(q.field('userId'), identity.subject)).first()
+
+        if (!user) {
+            throw new Error('User is not found');
+        }
+
+        const snippet = await context.db.get(args.snippetId);
+
+        if (!snippet) {
+        throw new Error("Snippet is not found");
+        }
+
+        return await context.db.insert('snippetComments', {
+            userId: user._id,
+            userName: user.name,
+            snippetId: args.snippetId,
+            content: args.content
+        })
+    }
+})
+
+export const deleteComment = mutation({
+    args: {
+        commentId: v.id('snippetComments')
+    },
+    handler: async (context, args) => {
+        const identity = await context.auth.getUserIdentity();
+
+        if (!identity) {
+            throw new Error("User is not authenticated");
+        }
+
+        const user = await context.db.query('users').withIndex('by_user_id').filter(q => q.eq(q.field('userId'), identity.subject)).first()
+
+        if (!user) {
+            throw new Error('User is not found');
+        }
+
+        const comment = await context.db.get(args.commentId);
+        
+        if (!comment || comment.userId !== identity.subject) {
+            throw new Error("User is not authorized to delete this comment")
+        }
+
+        await context.db.delete(args.commentId)
+    }
+})
 
 // Mutation handlers
 export const backfillSearchMetadata = internalMutation({
