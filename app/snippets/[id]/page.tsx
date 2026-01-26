@@ -13,6 +13,7 @@ import CopyButton from "./_components/CopyButton";
 import Comments from "./_components/Comments";
 import { STATIC_MONACO_CODE_CONFIGS } from "@/app/(root)/_constants/editorConfig";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
+import CodeBlock from "./_components/CodeBlock";
 
 function SnippetDetailPage() {
   const snippetId = useParams().id;
@@ -74,19 +75,8 @@ function SnippetDetailPage() {
               <Code className="w-4 h-4" />
               <span className="text-sm font-medium">Source Code</span>
             </div>
-            <CopyButton code={snippet.code} />
           </div>
-          <Editor
-            height="600px"
-            language={LANGUAGES_CONFIGS[snippet.language].monacoLanguage}
-            value={snippet.code}
-            theme={theme}
-            beforeMount={defineMonacoThemes}
-            options={{
-              fontSize: fontSize,
-              ...STATIC_MONACO_CODE_CONFIGS,
-            }}
-          />
+          <CodeBlock language={snippet.language} code={snippet.code}/>
         </div>
 
         <Comments snippetId={snippet._id} />

@@ -10,6 +10,10 @@ import CommentForm from "./CommentForm";
 
 function Comments({ snippetId }: { snippetId: Id<"snippets"> }) {
   const { user } = useUser();
+  const convexUser = useQuery(
+    api.users.getUser,
+    user?.id ? { userId: user.id } : 'skip'
+  )
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null);
 
@@ -35,6 +39,7 @@ function Comments({ snippetId }: { snippetId: Id<"snippets"> }) {
 
     try {
       await deleteComment({ commentId });
+      toast.success("Successfully delete the comment")
     } catch (error) {
       console.log("Error deleting comment:", error);
       toast.error("Something went wrong");
@@ -73,7 +78,7 @@ function Comments({ snippetId }: { snippetId: Id<"snippets"> }) {
               comment={comment}
               onDelete={handleDeleteComment}
               isDeleting={deletingCommentId === comment._id}
-              currentUserId={user?.id}
+              currentUserId={convexUser?._id}
             />
           ))}
         </div>

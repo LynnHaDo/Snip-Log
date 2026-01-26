@@ -6,7 +6,7 @@ interface CommentProps {
   comment: {
     _id: Id<"snippetComments">;
     _creationTime: number;
-    userId: string;
+    userId: Id<"users">;
     userName: string;
     snippetId: Id<"snippets">;
     content: string;

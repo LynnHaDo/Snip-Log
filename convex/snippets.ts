@@ -346,8 +346,12 @@ export const deleteComment = mutation({
         }
 
         const comment = await context.db.get(args.commentId);
+
+        if (!comment) {
+            throw new Error("Comment is not found.")
+        }
         
-        if (!comment || comment.userId !== identity.subject) {
+        if (comment.userId !== user._id) {
             throw new Error("User is not authorized to delete this comment")
         }
 
