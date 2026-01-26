@@ -147,7 +147,7 @@ export const getStarredSnippets = query({
   handler: async (context) => {
     const identity = await context.auth.getUserIdentity();
     if (!identity) {
-      return false;
+      return undefined;
     }
 
     const stars = await context.db
