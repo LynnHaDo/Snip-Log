@@ -34,7 +34,6 @@ export default defineSchema({
         searchField: 'searchMetadata',
         filterFields: ['language']
     }),
-    
 
     snippetComments: defineTable({
         snippetId: v.id("snippets"),

@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="grid justify-items-center w-full">
       <ControlWidget />
-      <div className="grid grid-cols-1 md:grid-cols-2 py-4 gap-3">
+      <div className="grid grid-cols-2 py-4 gap-3 w-full">
         <EditorWidget />
         <OutputWidget />
       </div>
