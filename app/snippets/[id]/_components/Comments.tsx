@@ -64,7 +64,7 @@ function Comments({ snippetId }: { snippetId: Id<"snippets"> }) {
           <div className="bg-[#0a0a0f] rounded-xl p-6 text-center mb-8 border border-[#ffffff0a]">
             <p className="text-[#808086] mb-4">Sign in to join the discussion</p>
             <SignInButton mode="modal">
-              <button className="px-6 py-2 bg-[#3b82f6] text-white rounded-lg hover:bg-[#2563eb] transition-colors">
+              <button className="px-8 py-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 hover:from-blue-500/20 hover:to-purple-500/20 text-white rounded-xl transition-all duration-200 border border-gray-800">
                 Sign In
               </button>
             </SignInButton>
