@@ -10,6 +10,7 @@ import { BookOpen, Code, Grid, Layers, Search, Tag, X } from "lucide-react";
 import SnippetCard from "./_components/SnippetCard";
 import { MAX_SNIPPETS_TO_LOAD, METADATA } from "./_constants/snippetsConfig";
 import { useDebounce } from "@/hooks/useDebounce";
+import Hero from "@/components/Hero";
 
 export default function Snippets() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,33 +52,11 @@ export default function Snippets() {
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-12">
       {/* Hero */}
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r
-             from-light to-purple-500/10 text-sm text-gray-400 mb-6"
-        >
-          <BookOpen className="w-4 h-4" />
-          {METADATA.label}
-        </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text mb-6"
-        >
-          {METADATA.title}
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-lg text-gray-400 mb-8"
-        >
-          {METADATA.subtitle}
-        </motion.p>
-      </div>
+      <Hero icon={<BookOpen className="w-4 h-4"/>} 
+            title={METADATA.title} 
+            subtitle={METADATA.subtitle}
+            label={METADATA.label}
+            />
 
       {/* Filters Section */}
       <div className="relative max-w-5xl mx-auto mb-12 space-y-6">

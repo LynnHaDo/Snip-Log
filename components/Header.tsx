@@ -5,7 +5,7 @@ import { BadgeDollarSign, Code2, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 import HeaderProfileBtn from "../app/(root)/_components/HeaderProfileBtn";
-import NavItem from "../app/(root)/_components/NavItem";
+import NavItem from "./NavItem";
 
 async function Header() {
   const isPro = await getSubscriptionStatus()

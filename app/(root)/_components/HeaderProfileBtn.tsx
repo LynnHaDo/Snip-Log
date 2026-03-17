@@ -2,7 +2,7 @@
 
 import { UserButton, SignedOut, SignInButton } from "@clerk/nextjs";
 import { User } from "lucide-react";
-import NavItem from "./NavItem";
+import NavItem from "../../../components/NavItem";
 
 export default function HeaderProfileBtn() {
     return <>
