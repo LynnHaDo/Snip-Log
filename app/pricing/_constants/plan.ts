@@ -4,7 +4,7 @@ export interface PayPlan {
 };
 
 export interface Plan {
-    name: string,
+    name: "Basic" | "Pro" | "Early Adopter",
     payPlans?: PayPlan[],
     description: string,
     features: {

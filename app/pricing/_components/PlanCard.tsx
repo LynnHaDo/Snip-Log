@@ -19,9 +19,10 @@ const PlanCard = ({ plan }: PlanCardProps) => {
           <Star className="w-8 h-8 text-[#41BF9B]" />
         </div>
         <h2 className="text-3xl font-semibold text-white mb-4">{plan.name}</h2>
+        <p className="text-gray-400 text-lg">{plan.description}</p>
         <div className="flex-col items-center gap-4 p-4 justify-self-center">
-          {plan.payPlans?.map((p) => (
-            <div className="flex items-baseline justify-center gap-2 mb-4">
+          {plan.payPlans?.map((p, idx) => (
+            <div className="flex items-baseline justify-center gap-2 mb-4" key={idx}>
               <span className="text-2xl text-gray-400">$</span>
               <span className="text-6xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
                 {p.price}
@@ -30,17 +31,18 @@ const PlanCard = ({ plan }: PlanCardProps) => {
             </div>
           ))}
         </div>
-        <p className="text-gray-400 text-lg">{plan.description}</p>
       </div>
 
       {/* Features grid */}
-      <div className="flex-col gap-10">
+      <div className="flex flex-col gap-5">
         <FeatureCategory label="Languages permitted">
-          {plan.features.language}
+          {plan.features.language.map((lang, idx) => (
+            <FeatureItem key={idx}>{lang}</FeatureItem>
+          ))}
         </FeatureCategory>
 
         <FeatureCategory label="Execution Limit">
-          {plan.features.executionLimitPerDay}/day
+          {plan.features.executionLimitPerDay.toString().toLocaleUpperCase()}/day
         </FeatureCategory>
 
         <FeatureCategory label="Key features">
@@ -51,9 +53,9 @@ const PlanCard = ({ plan }: PlanCardProps) => {
       </div>
 
       {/* CTA */}
-      <div className="flex justify-center">
+      <div className="flex justify-center py-5">
         <SignedIn>
-          <UpgradeButton />
+          {plan.name !== "Basic" && <UpgradeButton />}
         </SignedIn>
 
         <SignedOut>

@@ -28,8 +28,8 @@ export const ENTERPRISE_FEATURES = [
 
 export const PLANS: Plan[] = [
   {
-    name: "Free Tier",
-    description: "For the hobbyist",
+    name: "Basic",
+    description: "Basic use for the hobbyist",
     features: {
         language: [DEFAULT_LANGUAGE],
         executionLimitPerDay: 20,
@@ -47,7 +47,7 @@ export const PLANS: Plan[] = [
             frequency: "monthly"
         },
         {
-            price: 79,
+            price: 79.99,
             frequency: "annually"
         }
     ],

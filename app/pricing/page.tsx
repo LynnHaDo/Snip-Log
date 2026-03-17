@@ -18,7 +18,7 @@ async function Pricing() {
 
   return (
     <div className="relative max-w-7xl mx-auto px-4 py-12">
-      <main className="relative pt-32 pb-24 px-4">
+      <main className="relative">
         <div className="max-w-7xl mx-auto">
           <Hero
             icon={<DollarSign className="w-4 h-4" />}
@@ -53,8 +53,8 @@ async function Pricing() {
 
           {/* Pricing Card */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto">
-            {PLANS.map((plan) => (
-              <div className="relative bg-[#12121a]/90 backdrop-blur-xl rounded-2xl">
+            {PLANS.map((plan, idx) => (
+              <div className="relative bg-[#12121a]/90 backdrop-blur-xl rounded-2xl" key={idx}>
                 <div
                   className="absolute inset-x-0 -top-px h-px bg-gradient-to-r 
               from-transparent via-[#41BF9B] to-transparent"
