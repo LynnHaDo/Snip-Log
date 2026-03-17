@@ -76,7 +76,7 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
 
   return (
     <div
-      className="relative mb-8 bg-gradient-to-br from-[#12121a] to-[#1a1a2e] rounded-2xl p-8 border
+      className="relative mb-8 bg-gradient-to-br from-[#12121a] to-[#1a1a2e] rounded-2xl p-6 border
      border-gray-800/50 overflow-hidden"
     >
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
@@ -102,17 +102,17 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
         </div>
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-white">{userData.name}</h1>
+            <h1 className="text-3xl font-bold text-white">{userData.name || "Anonymous User"}</h1>
             {userData.isPro && (
               <span className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm font-medium">
                 Pro Member
               </span>
             )}
           </div>
-          <p className="text-gray-400 flex items-center gap-2">
+          <div className="text-gray-400 flex items-center gap-2">
             <UserIcon className="w-4 h-4" />
             {userData.email}
-          </p>
+          </div>
         </div>
       </div>
 

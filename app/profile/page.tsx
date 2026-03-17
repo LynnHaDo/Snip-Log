@@ -71,19 +71,19 @@ function Profile() {
         >
           {/* Tabs */}
           <div className="border-b border-gray-800/50">
-            <div className="flex space-x-1 p-4">
+            <div className="flex space-x-1 p-6">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as "executions" | "starred")}
                   className={`group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
-                    activeTab === tab.id ? "text-blue-400" : "text-gray-400 hover:text-gray-300"
+                    activeTab === tab.id ? "text-[#41BF9B]" : "text-gray-400 hover:text-gray-300"
                   }`}
                 >
                   {activeTab === tab.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-blue-500/10 rounded-lg"
+                      className="absolute inset-0 bg-[#012840] rounded-lg"
                       transition={{
                         type: "spring",
                         bounce: 0.2,
@@ -114,12 +114,12 @@ function Profile() {
                   {executions?.map((execution) => (
                     <div
                       key={execution._id}
-                      className="group rounded-xl overflow-hidden transition-all duration-300 hover:border-blue-500/50 hover:shadow-md hover:shadow-blue-500/50"
+                      className="group rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[#012840] hover:shadow-sm"
                     >
                       <div className="flex items-center justify-between p-4 bg-black/30 border border-gray-800/50 rounded-t-xl">
                         <div className="flex items-center gap-4">
                           <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg blur opacity-20 group-hover:opacity-30 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-r to-[#012840]-500 rounded-lg blur opacity-20 group-hover:opacity-30 transition-opacity" />
                             <Image
                               src={"/" + execution.language + ".png"}
                               alt=""
@@ -131,7 +131,7 @@ function Profile() {
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium text-white">
-                                {execution.language.toUpperCase()}
+                                {execution.language}
                               </span>
                               <span className="text-xs text-gray-400">•</span>
                               <span className="text-xs text-gray-400">
@@ -196,7 +196,7 @@ function Profile() {
                     <div className="flex justify-center mt-8">
                       <button
                         onClick={handleLoadMore}
-                        className="px-6 py-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg flex items-center gap-2 
+                        className="px-6 py-3 bg-[#012840] hover:bg-blue-500/20 text-[#41BF9B] rounded-lg flex items-center gap-2 
                         transition-colors"
                       >
                         Load More
