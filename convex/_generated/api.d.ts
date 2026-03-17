@@ -16,6 +16,7 @@ import type {
 import type * as backfill from "../backfill.js";
 import type * as codeExecutions from "../codeExecutions.js";
 import type * as http from "../http.js";
+import type * as migration from "../migration.js";
 import type * as snippets from "../snippets.js";
 import type * as users from "../users.js";
 
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   backfill: typeof backfill;
   codeExecutions: typeof codeExecutions;
   http: typeof http;
+  migration: typeof migration;
   snippets: typeof snippets;
   users: typeof users;
 }>;

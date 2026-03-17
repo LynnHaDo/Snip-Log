@@ -27,41 +27,43 @@ export const saveExecution = mutation({
 
     await ctx.db.insert("codeExecutions", {
       ...args,
-      userId: user!._id,
+      userId: identity.subject, // Clerk ID
     });
   },
 });
 
 export const getUserExecutions = query({
   args: {
-    userId: v.string(),
     paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
     return await ctx.db
       .query("codeExecutions")
       .withIndex("by_user_id")
-      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
       .order("desc")
       .paginate(args.paginationOpts);
   },
 });
 
 export const getUserStats = query({
-  args: {
-    userId: v.string(),
-  },
-  handler: async (context, args) => {
+  handler: async (context) => {
+    const identity = await context.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Not authenticated");
+
     const executions = await context.db
       .query("codeExecutions")
       .withIndex("by_user_id")
-      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
     const stars = await context.db
       .query("stars")
       .withIndex("by_user_id")
-      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
       .collect();
 
     const snippetIds = stars.map((star) => star.snippetId);

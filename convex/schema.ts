@@ -13,7 +13,7 @@ export default defineSchema({
     }).index("by_user_id", ["userId"]),
 
     codeExecutions: defineTable({
-        userId: v.id("users"),
+        userId: v.string(), // clerk id
         language: v.string(),
         code: v.string(),
         output: v.optional(v.string()),
@@ -21,7 +21,7 @@ export default defineSchema({
     }).index("by_user_id", ["userId"]),
 
     snippets: defineTable({
-        userId: v.id("users"),
+        userId: v.string(),
         userName: v.string(), // for easy access
         title: v.string(),
         language: v.string(),
@@ -37,13 +37,13 @@ export default defineSchema({
 
     snippetComments: defineTable({
         snippetId: v.id("snippets"),
-        userId: v.id('users'),
+        userId: v.string(),
         userName: v.string(), // for easy access
         content: v.string() // html 
     }).index("by_snippet_id", ["snippetId"]),
 
     stars: defineTable({
-        userId: v.id("users"),
+        userId: v.string(),
         snippetId: v.id("snippets")
     })
     .index("by_user_id", ["userId"])
