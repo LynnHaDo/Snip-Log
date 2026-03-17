@@ -119,7 +119,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                       <User className="size-3" />
                     </div>
                     <span className="truncate max-w-[150px]">
-                      {snippet.userName}
+                      {snippet.userName || "Anonymous User"}
                     </span>
                   </div>
                 </div>

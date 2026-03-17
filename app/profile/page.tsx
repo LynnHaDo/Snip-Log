@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import StarButton from "@/app/(root)/_components/StarButton";
 import CodeBlock from "./_components/CodeBlock";
+import OutputBlock from './_components/OutputBlock'
 
 const TABS = [
   {
@@ -156,18 +157,11 @@ function Profile() {
                       <div className="p-4 bg-black/20 rounded-b-xl border border-t-0 border-gray-800/50">
                         <CodeBlock code={execution.code} language={execution.language} />
 
-                        {(execution.output || execution.error) && (
-                          <div className="mt-4 p-4 rounded-lg bg-black/40">
-                            <h4 className="text-sm font-medium text-gray-400 mb-2">Output</h4>
-                            <pre
-                              className={`text-sm ${
-                                execution.error ? "text-red-400" : "text-green-400"
-                              }`}
-                            >
-                              {execution.error || execution.output}
-                            </pre>
-                          </div>
-                        )}
+                        {(execution.error || execution.output) && 
+                          <OutputBlock text={execution.error || execution.output} 
+                                       textClassName={execution.error ? "text-red-400" : "text-green-400"}
+                                        title="Output"/>
+                        }
                       </div>
                     </div>
                   ))}

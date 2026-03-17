@@ -2,6 +2,7 @@
 
 import { UserButton, SignedOut, SignInButton } from "@clerk/nextjs";
 import { User } from "lucide-react";
+import NavItem from "./NavItem";
 
 export default function HeaderProfileBtn() {
     return <>
@@ -16,7 +17,7 @@ export default function HeaderProfileBtn() {
     </UserButton>
 
     <SignedOut>
-        <SignInButton />
+        <NavItem element={<SignInButton />} icon={<User className="w-4 h-4 text-white-400 hover:text-white-300" />}/>
     </SignedOut>
     </>
 }
