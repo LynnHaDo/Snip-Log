@@ -1,4 +1,4 @@
-export const MAX_SNIPPETS_TO_LOAD = 10;
+export const MAX_SNIPPETS_TO_LOAD = 5;
 
 export const METADATA = {
     label: "SnipShelf",

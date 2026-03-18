@@ -2,7 +2,7 @@
 
 import { usePaginatedQuery, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import SnippetsPageSkeleton from "./_components/SnippetsPageSkeleton";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,19 +25,19 @@ export default function Snippets() {
     { initialNumItems: MAX_SNIPPETS_TO_LOAD },
   );
   const [view, setView] = useState<"grid" | "list">("grid");
-  const pageBottomRef = useRef(null);
 
   const popularLanguages = useQuery(api.snippets.getTopFiveLanguages);
   const filteredSnippets = results
 
+  const pageBottomRef = useRef(null);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && status === "CanLoadMore") {
-          loadMore(MAX_SNIPPETS_TO_LOAD); // Load the next 12 items
+          loadMore(MAX_SNIPPETS_TO_LOAD);
         }
       },
-      { threshold: 1.0 },
+      { rootMargin: "20px" } 
     );
 
     if (pageBottomRef.current) observer.observe(pageBottomRef.current);
@@ -160,7 +160,7 @@ export default function Snippets() {
 
       {/* Snippets Grid */}
       <motion.div
-        className={`grid gap-6 ${
+        className={`grid gap-6 snippets-grid ${
           view === "grid"
             ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
             : "grid-cols-1 max-w-3xl mx-auto"
