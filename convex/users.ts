@@ -42,3 +42,17 @@ export const getUser = query({
         return user
     }
 })
+
+export const upgradeToPro = mutation({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .first();
+
+    if (user) {
+      await ctx.db.patch(user._id, { isPro: true });
+    }
+  },
+});

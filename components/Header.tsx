@@ -21,7 +21,7 @@ async function Header() {
             {/* Logo */}
             <div className="relative p-2 rounded-xl ring-1 ring-white/10 group-hover:ring-white/20 transition-all">
               <Logo
-                className={`size-6 transform text-logo -rotate-6 group-hover:rotate-0 transition-transform duration-500`}
+                className={`size-6 transform text-logo -rotate-6 group-hover:rotate-0 transition-transform duration-500 text-[#41BF9B]`}
               />
             </div>
 

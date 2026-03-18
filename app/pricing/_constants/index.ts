@@ -51,7 +51,7 @@ export const PLANS: Plan[] = [
             frequency: "annually"
         }
     ],
-    description: "Unlocks all programming languages",
+    description: "Unlocks support for all programming languages and AI features",
     features: {
         language: Object.keys(LANGUAGES_CONFIGS),
         executionLimitPerDay: "unlimited",
