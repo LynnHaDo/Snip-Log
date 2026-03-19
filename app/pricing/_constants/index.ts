@@ -30,6 +30,7 @@ export const PLANS: Plan[] = [
   {
     name: "Basic",
     description: "Basic use for the hobbyist",
+    payPlans: [],
     features: {
         language: [DEFAULT_LANGUAGE],
         executionLimitPerDay: 20,
@@ -44,11 +45,13 @@ export const PLANS: Plan[] = [
     payPlans: [
         {
             price: 8,
+            priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID!,
             frequency: "monthly"
         },
         {
             price: 79.99,
-            frequency: "annually"
+            frequency: "annually",
+            priceId: process.env.STRIPE_PRO_ANNUALLY_PRICE_ID!,
         }
     ],
     description: "Unlocks support for all programming languages and AI features",
@@ -67,7 +70,8 @@ export const PLANS: Plan[] = [
     payPlans: [
         {
             price: 300,
-            frequency: "one-time"
+            frequency: "one-time",
+            priceId: process.env.STRIPE_EARLY_ADOPTER_PRICE_ID!,
         }
     ],
     description: "Lifetime access to all Pro features",

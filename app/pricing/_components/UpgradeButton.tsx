@@ -2,10 +2,29 @@
 
 import { Zap } from "lucide-react";
 import { motion } from "motion/react";
+import { PayPlan } from "../_constants/plan";
+import { useState } from "react";
+import { createCheckoutSession } from "@/app/actions/stripe";
+import toast from "react-hot-toast";
 
-export default function UpgradeButton() {
-  const handlePay = () => {
-    console.log("User upgrade");
+export default function UpgradeButton({priceId, frequency}: PayPlan) {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handlePay = async () => {
+    try {
+        setIsLoading(true);
+
+        const checkoutUrl = await createCheckoutSession(priceId, frequency);
+
+        if (checkoutUrl) {
+            window.location.href = checkoutUrl; // redirect to external stripe checkout
+        }
+    } catch (e) {
+        console.error("Payment routing failed:", e);
+        toast.error("Failed to initiate checkout. Please try again.");
+    } finally {
+        setIsLoading(false);
+    }
   };
 
   return (
@@ -19,7 +38,7 @@ export default function UpgradeButton() {
         rounded-xl transition-all duration-200 border border-gray-800 group"
     >
       <Zap className="w-5 h-5" />
-      Upgrade to Pro
+      {isLoading ? "Redirecting..." : "Upgrade to Pro"}
     </motion.button>
   );
 }

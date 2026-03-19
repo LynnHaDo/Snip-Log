@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   const headerList = await headers()
   const signature = headerList.get("Stripe-Signature") as string;
 
-  let event;
+  let event: Stripe.Event;
   try {
     // Verify the event actually came from Stripe
     event = stripe.webhooks.constructEvent(
@@ -23,16 +23,53 @@ export async function POST(req: Request) {
     return new Response("Webhook signature verification failed", { status: 400 });
   }
 
-  // Handle the successful payment
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const clerkUserId = session.metadata?.clerkUserId;
+  try {
+    switch (event.type) {
+        case "checkout.session.completed": {
+            const session = event.data.object as Stripe.Checkout.Session;
+            const clerkUserId = session.metadata?.clerkUserId;
 
-    if (clerkUserId) {
-      await convex.mutation(api.users.upgradeToPro, { 
-        userId: clerkUserId 
-      });
+            if (clerkUserId) {
+                await convex.mutation(api.users.updateSubscription, { 
+                    userId: clerkUserId,
+                    stripeCustomerId: session.customer as string,
+                    stripeSubscriptionId: session.subscription as string | undefined,
+                    isPro: true,
+                    planType: session.metadata?.planType as "pro" | "early-adopter"
+                });
+            }
+
+            break;
+        }
+
+        case "customer.subscription.updated": {
+            const subscription = event.data.object as Stripe.Subscription;
+            await convex.mutation(api.users.updateSubscription, { 
+                stripeCustomerId: subscription.customer as string,
+                stripeSubscriptionId: subscription.id,
+                isPro: subscription.status === "active",
+                planType: "pro"
+            });
+
+            break;
+        }
+
+        case "customer.subscription.deleted": {
+            const subscription = event.data.object as Stripe.Subscription;
+
+            await convex.mutation(api.users.updateSubscription, { 
+                stripeCustomerId: subscription.customer as string,
+                stripeSubscriptionId: undefined,
+                isPro: false,
+                planType: "basic"
+            });
+
+            break;
+        }
     }
+  } catch (e) {
+    console.error(`Error connecting to Convex database: ${e}`);
+    return new Response(`Error connecting to Convex database: ${e}`, { status: 500 });
   }
 
   return new Response("Webhook processed successfully", { status: 200 });

@@ -21,13 +21,29 @@ const PlanCard = ({ plan }: PlanCardProps) => {
         <h2 className="text-3xl font-semibold text-white mb-4">{plan.name}</h2>
         <p className="text-gray-400 text-lg">{plan.description}</p>
         <div className="flex-col items-center gap-4 p-4 justify-self-center">
-          {plan.payPlans?.map((p, idx) => (
+          {plan.payPlans?.map((payPlan, idx) => (
             <div className="flex items-baseline justify-center gap-2 mb-4" key={idx}>
               <span className="text-2xl text-gray-400">$</span>
               <span className="text-6xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
-                {p.price}
+                {payPlan.price}
               </span>
-              <span className="text-xl text-gray-400">{p.frequency}</span>
+              <span className="text-xl text-gray-400">{payPlan.frequency}</span>
+
+              {/* CTA */}
+                <div className="flex justify-center py-5">
+                    <SignedIn>
+                        <UpgradeButton priceId = {payPlan.priceId} frequency= {payPlan.frequency} price = {payPlan.price}/>
+                    </SignedIn>
+
+                    <SignedOut>
+                    <NavItem
+                        element={<SignInButton />}
+                        icon={
+                        <User className="w-4 h-4 text-white-400 hover:text-white-300" />
+                        }
+                    />
+                    </SignedOut>
+                </div>
             </div>
           ))}
         </div>
@@ -50,22 +66,6 @@ const PlanCard = ({ plan }: PlanCardProps) => {
             <FeatureItem key={idx}>{feature}</FeatureItem>
           ))}
         </FeatureCategory>
-      </div>
-
-      {/* CTA */}
-      <div className="flex justify-center py-5">
-        <SignedIn>
-          {plan.name !== "Basic" && <UpgradeButton />}
-        </SignedIn>
-
-        <SignedOut>
-          <NavItem
-            element={<SignInButton />}
-            icon={
-              <User className="w-4 h-4 text-white-400 hover:text-white-300" />
-            }
-          />
-        </SignedOut>
       </div>
     </div>
   );

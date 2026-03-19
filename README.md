@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is the frontend app for SnipLog, a platform for sharing, executing code snippets. AI integration to be added soon.
 
 ## Getting Started
 
@@ -9,7 +9,7 @@ nvm use node
 npm run dev
 ```
 
-On a separate terminal tab, activate convex:
+Whenever a schema needs to be changed, reactivate convex:
 
 ```bash
 npx convex dev
@@ -19,8 +19,29 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Deploy on Vercel
+## Testing Stripe API locally
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Install Stripe CLI
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+brew install stripe/stripe-cli/stripe
+```
+
+2. Log in 
+
+```
+stripe login
+```
+
+3. In a separate terminal (from your app dev run), start the webhook forwarder
+
+```
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+
+4. In your `.env` file, save your webhook secret and Stripe's secret key
+
+```
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```

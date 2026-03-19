@@ -1,4 +1,4 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from './_generated/server';
 
 export const saveUser = mutation({
@@ -43,16 +43,34 @@ export const getUser = query({
     }
 })
 
-export const upgradeToPro = mutation({
-  args: { userId: v.string() },
+export const updateSubscription = mutation({
+  args: { 
+    userId: v.optional(v.string()),
+    stripeCustomerId: v.string(),
+    stripeSubscriptionId: v.optional(v.string()),
+    isPro: v.boolean(),
+    planType: v.union(v.literal("basic"), v.literal("pro"), v.literal("early-adopter"))
+  },
   handler: async (ctx, args) => {
-    const user = await ctx.db
+    let user = await ctx.db
       .query("users")
-      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
+      .withIndex("by_stripe_customer_id", (q) => q.eq("stripeCustomerId", args.stripeCustomerId))
       .first();
-
-    if (user) {
-      await ctx.db.patch(user._id, { isPro: true });
+    
+    if (!user && args.userId) {
+        user = await ctx.db.query("users").withIndex("by_user_id", (q) => q.eq("userId", args.userId!)).first();
     }
+
+    if (!user) {
+        throw new ConvexError("Webhook error: User not found");
+    }
+
+    await ctx.db.patch(user._id, { 
+        isPro: args.isPro, 
+        proSince: args.isPro ? new Date().getFullYear() : undefined,
+        planType: args.planType,
+        stripeCustomerId: args.stripeCustomerId,
+        stripeSubscriptionId: args.stripeSubscriptionId
+    });
   },
 });
