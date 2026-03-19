@@ -32,8 +32,8 @@ export async function POST(req: Request) {
             if (clerkUserId) {
                 await convex.mutation(api.users.updateSubscription, { 
                     userId: clerkUserId,
-                    stripeCustomerId: session.customer as string,
-                    stripeSubscriptionId: session.subscription as string | undefined,
+                    stripeCustomerId: (session.customer as string) || undefined,
+                    stripeSubscriptionId: (session.subscription as string) || undefined,
                     isPro: true,
                     planType: session.metadata?.planType as "pro" | "early-adopter"
                 });

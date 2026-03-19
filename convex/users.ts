@@ -46,7 +46,7 @@ export const getUser = query({
 export const updateSubscription = mutation({
   args: { 
     userId: v.optional(v.string()),
-    stripeCustomerId: v.string(),
+    stripeCustomerId: v.optional(v.string()),
     stripeSubscriptionId: v.optional(v.string()),
     isPro: v.boolean(),
     planType: v.union(v.literal("basic"), v.literal("pro"), v.literal("early-adopter"))

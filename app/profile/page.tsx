@@ -1,8 +1,8 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import { usePaginatedQuery, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
@@ -13,6 +13,7 @@ import Link from "next/link";
 import StarButton from "@/app/(root)/_components/StarButton";
 import CodeBlock from "./_components/CodeBlock";
 import OutputBlock from './_components/OutputBlock'
+import toast from "react-hot-toast";
 
 const TABS = [
   {
@@ -46,6 +47,18 @@ function Profile() {
     { },
     { initialNumItems: 5 }
   );
+
+  const searchParams = useSearchParams();
+  const success = searchParams.get("success");
+
+  useEffect(() => {
+    if (success === 'true') {
+        toast.success("Payment successful! Welcome to Pro 🎉", {
+            duration: 5000
+        })
+        router.replace("/profile", {scroll: false}) // clean up URL
+    }
+  }, [success, router])
 
   const userData = useQuery(api.users.getUser, { userId: user?.id ?? "" });
 

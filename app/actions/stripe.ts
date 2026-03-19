@@ -14,6 +14,7 @@ export async function createCheckoutSession(priceId: string, frequency: PayPlanF
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: mode,
+    customer_creation: mode === "payment" ? "always" : undefined,
     line_items: [
       {
         price: priceId, // The Stripe Price ID you create in your dashboard
