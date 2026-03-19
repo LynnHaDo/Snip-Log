@@ -20,19 +20,21 @@ const PlanCard = ({ plan }: PlanCardProps) => {
         </div>
         <h2 className="text-3xl font-semibold text-white mb-4">{plan.name}</h2>
         <p className="text-gray-400 text-lg">{plan.description}</p>
-        <div className="flex-col items-center gap-4 p-4 justify-self-center">
+        <div className="flex-col items-center gap-4 my-5 justify-self-center">
           {plan.payPlans?.map((payPlan, idx) => (
-            <div className="flex items-baseline justify-center gap-2 mb-4" key={idx}>
+            <div className="flex flex-col justify-center py-5" key={idx}>
+            <div className="flex items-baseline justify-center gap-2">
               <span className="text-2xl text-gray-400">$</span>
               <span className="text-6xl font-semibold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text">
                 {payPlan.price}
               </span>
               <span className="text-xl text-gray-400">{payPlan.frequency}</span>
-
-              {/* CTA */}
-                <div className="flex justify-center py-5">
+            </div>
+            {/* CTA */}
+                <div className="flex justify-center py-2">
                     <SignedIn>
-                        <UpgradeButton priceId = {payPlan.priceId} frequency= {payPlan.frequency} price = {payPlan.price}/>
+                        <UpgradeButton priceId = {payPlan.priceId} 
+                                       frequency= {payPlan.frequency} />
                     </SignedIn>
 
                     <SignedOut>

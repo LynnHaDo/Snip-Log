@@ -2,12 +2,17 @@
 
 import { Zap } from "lucide-react";
 import { motion } from "motion/react";
-import { PayPlan } from "../_constants/plan";
+import { PayPlan, PayPlanFrequency } from "../_constants/plan";
 import { useState } from "react";
 import { createCheckoutSession } from "@/app/actions/stripe";
 import toast from "react-hot-toast";
 
-export default function UpgradeButton({priceId, frequency}: PayPlan) {
+interface UpgradeButtonProps {
+    priceId: string,
+    frequency: PayPlanFrequency,
+}
+
+export default function UpgradeButton({priceId, frequency}: UpgradeButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   
   const handlePay = async () => {
@@ -38,7 +43,7 @@ export default function UpgradeButton({priceId, frequency}: PayPlan) {
         rounded-xl transition-all duration-200 border border-gray-800 group"
     >
       <Zap className="w-5 h-5" />
-      {isLoading ? "Redirecting..." : "Upgrade to Pro"}
+      {isLoading ? "Redirecting..." : "Select this plan"}
     </motion.button>
   );
 }
