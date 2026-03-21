@@ -32,10 +32,10 @@ function Profile() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"executions" | "starred">("executions");
-
-  const userStats = useQuery(api.codeExecutions.getUserStats);
-
-  const starredSnippets = useQuery(api.snippets.getStarredSnippets);
+  
+  // Wait for Clerk to load the user before querying stats
+  const userStats = useQuery(api.codeExecutions.getUserStats, isLoaded && user ? {} : "skip");
+  const starredSnippets = useQuery(api.snippets.getStarredSnippets, isLoaded && user ? {} : "skip");
 
   const {
     results: executions,
@@ -44,7 +44,7 @@ function Profile() {
     loadMore,
   } = usePaginatedQuery(
     api.codeExecutions.getUserExecutions,
-    { },
+    isLoaded && user ? {} : "skip",
     { initialNumItems: 5 }
   );
 
@@ -60,7 +60,7 @@ function Profile() {
     }
   }, [success, router])
 
-  const userData = useQuery(api.users.getUser, { userId: user?.id ?? "" });
+  const userData = useQuery(api.users.getUser, isLoaded && user ? { userId: user.id } : "skip");
 
   const handleLoadMore = () => {
     if (executionStatus === "CanLoadMore") loadMore(5);
