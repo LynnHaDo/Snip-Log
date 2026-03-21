@@ -1,10 +1,20 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Activity, Code2, Star, Timer, TrendingUp, Trophy, UserIcon, Zap } from "lucide-react";
+import {
+  Activity,
+  Code2,
+  Star,
+  Timer,
+  TrendingUp,
+  Trophy,
+  UserIcon,
+  Zap,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { Id } from "@/convex/_generated/dataModel";
 
 import { UserResource } from "@clerk/types";
+import ManageSubscriptionButton from "./ManageSubscriptionButton";
 
 interface ProfileHeaderProps {
   userStats: {
@@ -100,19 +110,17 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
             </div>
           )}
         </div>
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl font-bold text-white">{userData.name || "Anonymous User"}</h1>
-            {userData.isPro && (
-              <span className="px-3 py-1 bg-purple-500/10 text-purple-400 rounded-full text-sm font-medium">
-                Pro Member
-              </span>
-            )}
+        <div className="flex items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              {userData.name || "Anonymous User"}
+            </h1>
+            <div className="text-gray-400 flex items-center gap-2 my-2">
+              <UserIcon className="w-4 h-4" />
+              {userData.email}
+            </div>
           </div>
-          <div className="text-gray-400 flex items-center gap-2">
-            <UserIcon className="w-4 h-4" />
-            {userData.email}
-          </div>
+          {userData.isPro && <div className="p-5"> <ManageSubscriptionButton /> </div>}
         </div>
       </div>
 
@@ -137,14 +145,20 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-gray-400">{stat.description}</span>
+                    <span className="text-sm font-medium text-gray-400">
+                      {stat.description}
+                    </span>
                   </div>
                   <h3 className="text-2xl font-bold text-white tracking-tight">
-                    {typeof stat.value === "number" ? stat.value.toLocaleString() : stat.value}
+                    {typeof stat.value === "number"
+                      ? stat.value.toLocaleString()
+                      : stat.value}
                   </h3>
                   <p className="text-sm text-gray-400 mt-1">{stat.label}</p>
                 </div>
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} bg-opacity-10`}>
+                <div
+                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} bg-opacity-10`}
+                >
                   <stat.icon className="w-5 h-5 text-white" />
                 </div>
               </div>
@@ -152,8 +166,12 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
               {/* Additional metric */}
               <div className="flex items-center gap-2 pt-4 border-t border-gray-800/50">
                 <stat.metric.icon className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-400">{stat.metric.label}:</span>
-                <span className="text-sm font-medium text-white">{stat.metric.value}</span>
+                <span className="text-sm text-gray-400">
+                  {stat.metric.label}:
+                </span>
+                <span className="text-sm font-medium text-white">
+                  {stat.metric.value}
+                </span>
               </div>
             </div>
 

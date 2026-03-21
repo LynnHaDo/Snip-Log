@@ -2,7 +2,7 @@
 
 import { Zap } from "lucide-react";
 import { motion } from "motion/react";
-import { PayPlan, PayPlanFrequency } from "../_constants/plan";
+import { PayPlanFrequency } from "../_constants/plan";
 import { useState } from "react";
 import { createCheckoutSession } from "@/app/actions/stripe";
 import toast from "react-hot-toast";
