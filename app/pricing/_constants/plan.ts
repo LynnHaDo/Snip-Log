@@ -1,6 +1,6 @@
 export interface PayPlan {
     price: number,
-    frequency: "one-time" | "monthly" | "annually"
+    frequency: PayPlanFrequency
 };
 
 export interface Plan {

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
-import { ChevronRight, Clock, Code, ListVideo, Loader2, Star } from "lucide-react";
+import { ChevronRight, Clock, Code, Loader2, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,19 +14,7 @@ import StarButton from "@/app/(root)/_components/StarButton";
 import CodeBlock from "./_components/CodeBlock";
 import OutputBlock from './_components/OutputBlock'
 import toast from "react-hot-toast";
-
-const TABS = [
-  {
-    id: "executions",
-    label: "Code Executions",
-    icon: ListVideo,
-  },
-  {
-    id: "starred",
-    label: "Starred Snippets",
-    icon: Star,
-  },
-];
+import { TABS } from "./_constants";
 
 function Profile() {
   const { user, isLoaded } = useUser();
@@ -89,7 +77,7 @@ function Profile() {
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as "executions" | "starred")}
+                  onClick={() => setActiveTab(tab.id)}
                   className={`group flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-200 relative overflow-hidden ${
                     activeTab === tab.id ? "text-[#41BF9B]" : "text-gray-400 hover:text-gray-300"
                   }`}
