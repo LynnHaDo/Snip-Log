@@ -8,6 +8,8 @@ import {
 import { paginationOptsValidator } from "convex/server";
 import { Id } from "./_generated/dataModel";
 
+const DEFAULT_USER_NAME = "Anonymous user";
+
 export const createSnippet = mutation({
   args: {
     title: v.string(),
@@ -93,13 +95,13 @@ export const getSnippets = query({
 
     const snippetsWithUsers = await Promise.all(
       paginatedSnippets.page.map(async (snippet) => {
-        const user = await context.db.query("users").withIndex("by_id", (q) => q.eq("_id", snippet.userId as Id<"users">)).first();
-        
-        console.log(user == null)
-
+        const user = await context.db
+          .query("users")
+          .withIndex("by_id", (q) => q.eq("_id", snippet.userId as Id<"users">))
+          .first();
         return {
           ...snippet,
-          userName: user?.name ?? "Anonymous user",
+          userName: user?.name ?? DEFAULT_USER_NAME,
         };
       }),
     );
@@ -290,7 +292,15 @@ export const getSnippetById = query({
       throw new Error("Snippet not found");
     }
 
-    return snippet;
+    const user = await context.db
+      .query("users")
+      .withIndex("by_id", (q) => q.eq("_id", snippet.userId as Id<"users">))
+      .first();
+    
+    return {
+      ...snippet,
+      userName: user?.name ?? DEFAULT_USER_NAME,
+    };
   },
 });
 
@@ -306,7 +316,14 @@ export const getComments = query({
       .order("desc")
       .collect();
 
-    return comments;
+    return await Promise.all(comments.map(async (comment) => {
+        const user = await context.db.query("users").withIndex("by_id", q => q.eq("_id", comment.userId as Id<"users">)).first();
+
+        return {
+            ...comment,
+            userName: user?.name || DEFAULT_USER_NAME
+        }
+    }));
   },
 });
 
@@ -344,7 +361,6 @@ export const addComment = mutation({
 
     return await context.db.insert("snippetComments", {
       userId: user._id,
-      userName: user.name,
       snippetId: args.snippetId,
       content: args.content,
     });

@@ -6,12 +6,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import SnippetLoadingSkeleton from "./_components/SnippetLoadingSkeleton";
 import { Clock, Code, MessageSquare, User } from "lucide-react";
-import { Editor } from "@monaco-editor/react";
-import { defineMonacoThemes } from "@/app/(root)/_constants/themeConfig";
-import { LANGUAGES_CONFIGS } from "@/app/(root)/_constants/languageConfig";
-import CopyButton from "./_components/CopyButton";
 import Comments from "./_components/Comments";
-import { STATIC_MONACO_CODE_CONFIGS } from "@/app/(root)/_constants/editorConfig";
 import { useCodeEditorStore } from "@/store/useCodeEditorStore";
 import CodeBlock from "./_components/CodeBlock";
 
@@ -23,7 +18,6 @@ function SnippetDetailPage() {
   const comments = useQuery(api.snippets.getComments, {
     snippetId: snippetId as Id<"snippets">,
   });
-  const { theme, fontSize } = useCodeEditorStore();
   if (snippet === undefined) return <SnippetLoadingSkeleton />;
 
   return (
