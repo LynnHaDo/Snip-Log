@@ -2,7 +2,7 @@
 import { useUser } from "@clerk/nextjs";
 import { usePaginatedQuery, useQuery } from "convex/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { api } from "@/convex/_generated/api";
 import ProfileHeader from "./_components/ProfileHeader";
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton";
@@ -16,7 +16,7 @@ import OutputBlock from './_components/OutputBlock'
 import toast from "react-hot-toast";
 import { TABS } from "./_constants";
 
-function Profile() {
+const ProfileContent = () => {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"executions" | "starred">("executions");
@@ -54,7 +54,10 @@ function Profile() {
     if (executionStatus === "CanLoadMore") loadMore(5);
   };
 
-  if (!user && isLoaded) return router.push("/");
+  if (!user && isLoaded) {
+    router.push("/");
+    return null;
+  }
 
   return (
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -279,4 +282,11 @@ function Profile() {
       </div>
   );
 }
+
+function Profile() {
+    return <Suspense fallback={<ProfileHeaderSkeleton />}>
+        <ProfileContent />
+    </Suspense>
+}
+
 export default Profile;
