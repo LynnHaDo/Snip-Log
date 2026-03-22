@@ -15,6 +15,7 @@ import { Id } from "@/convex/_generated/dataModel";
 
 import { UserResource } from "@clerk/types";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
+import EditUsernameButton from "./EditUsernameButton";
 
 interface ProfileHeaderProps {
   userStats: {
@@ -112,9 +113,12 @@ function ProfileHeader({ userStats, userData, user }: ProfileHeaderProps) {
         </div>
         <div className="flex items-center">
           <div>
+            <div className="flex gap-3">
             <h1 className="text-3xl font-bold text-white">
               {userData.name || "Anonymous User"}
             </h1>
+            <EditUsernameButton currentUsername={userData.name || "Anonymous User"} />
+            </div>
             <div className="text-gray-400 flex items-center gap-2 my-2">
               <UserIcon className="w-4 h-4" />
               {userData.email}

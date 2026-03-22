@@ -36,7 +36,7 @@ stripe login
 3. In a separate terminal (from your app dev run), start the webhook forwarder
 
 ```
-stripe listen --forward-to localhost:3000/api/webhooks/stripe
+stripe listen --forward-to http://localhost:3000/api/webhooks/stripe
 ```
 
 4. In your `.env` file, save your webhook secret and Stripe's secret key

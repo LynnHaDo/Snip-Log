@@ -2,7 +2,7 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { Webhook } from "svix";
 import { WebhookEvent } from "@clerk/nextjs/server";
-
+import { generateUsername } from "unique-username-generator";
 import { api } from './_generated/api';
 
 const http = httpRouter();
@@ -49,7 +49,11 @@ http.route({
       const { id, email_addresses, first_name, last_name } = evt.data;
 
       const email = email_addresses[0].email_address;
-      const name = `${first_name || ""} ${last_name || ""}`.trim();
+      let name = `${first_name || ""} ${last_name || ""}`.trim();
+      
+      if (name == "") {
+        name = generateUsername("-", 0, 15)
+      }
 
       try {
         await ctx.runMutation(api.users.saveUser, {
