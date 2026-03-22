@@ -27,7 +27,6 @@ export default defineSchema({
 
   snippets: defineTable({
     userId: v.string(),
-    userName: v.string(), // for easy access
     title: v.string(),
     language: v.string(),
     code: v.string(),
