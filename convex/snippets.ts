@@ -126,11 +126,8 @@ export const isSnippetStarred = query({
 
     const star = await context.db
       .query("stars")
-      .withIndex("by_user_id_and_snippet_id")
-      .filter(
-        (q) =>
-          q.eq(q.field("userId"), identity.subject) &&
-          q.eq(q.field("snippetId"), args.snippetId),
+      .withIndex("by_user_id_and_snippet_id", (q) =>
+        q.eq("userId", identity.subject).eq("snippetId", args.snippetId),
       )
       .first();
     return !!star;
@@ -205,8 +202,7 @@ export const deleteSnippet = mutation({
 
     const comments = await context.db
       .query("snippetComments")
-      .withIndex("by_snippet_id")
-      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .withIndex("by_snippet_id", (q) => q.eq("snippetId", args.snippetId))
       .collect();
 
     for (const comment of comments) {
@@ -215,8 +211,7 @@ export const deleteSnippet = mutation({
 
     const stars = await context.db
       .query("stars")
-      .withIndex("by_snippet_id")
-      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .withIndex("by_snippet_id", (q) => q.eq("snippetId", args.snippetId))
       .collect();
 
     for (const star of stars) {
@@ -262,11 +257,8 @@ export const starSnippet = mutation({
 
     const existingStar = await context.db
       .query("stars")
-      .withIndex("by_user_id_and_snippet_id")
-      .filter(
-        (q) =>
-          q.eq(q.field("userId"), identity.subject) &&
-          q.eq(q.field("snippetId"), args.snippetId),
+      .withIndex("by_user_id_and_snippet_id", (q) =>
+        q.eq("userId", identity.subject).eq("snippetId", args.snippetId),
       )
       .first();
 
@@ -274,8 +266,8 @@ export const starSnippet = mutation({
       await context.db.delete(existingStar._id);
     } else {
       await context.db.insert("stars", {
-        userId: snippet.userId,
-        snippetId: snippet._id,
+        userId: identity.subject,
+        snippetId: args.snippetId,
       });
     }
   },
@@ -296,7 +288,7 @@ export const getSnippetById = query({
       .query("users")
       .withIndex("by_id", (q) => q.eq("_id", snippet.userId as Id<"users">))
       .first();
-    
+
     return {
       ...snippet,
       userName: user?.name ?? DEFAULT_USER_NAME,
@@ -311,19 +303,23 @@ export const getComments = query({
   handler: async (context, args) => {
     const comments = await context.db
       .query("snippetComments")
-      .withIndex("by_snippet_id")
-      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .withIndex("by_snippet_id", (q) => q.eq("snippetId", args.snippetId))
       .order("desc")
       .collect();
 
-    return await Promise.all(comments.map(async (comment) => {
-        const user = await context.db.query("users").withIndex("by_id", q => q.eq("_id", comment.userId as Id<"users">)).first();
+    return await Promise.all(
+      comments.map(async (comment) => {
+        const user = await context.db
+          .query("users")
+          .withIndex("by_id", (q) => q.eq("_id", comment.userId as Id<"users">))
+          .first();
 
         return {
-            ...comment,
-            userName: user?.name || DEFAULT_USER_NAME
-        }
-    }));
+          ...comment,
+          userName: user?.name || DEFAULT_USER_NAME,
+        };
+      }),
+    );
   },
 });
 
@@ -345,8 +341,7 @@ export const addComment = mutation({
 
     const user = await context.db
       .query("users")
-      .withIndex("by_user_id")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .withIndex("by_user_id", (q) => q.eq("userId", identity.subject))
       .first();
 
     if (!user) {
@@ -380,8 +375,7 @@ export const deleteComment = mutation({
 
     const user = await context.db
       .query("users")
-      .withIndex("by_user_id")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .withIndex("by_user_id", (q) => q.eq("userId", identity.subject))
       .first();
 
     if (!user) {

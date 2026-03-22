@@ -5,7 +5,7 @@ This is the frontend app for SnipLog, a platform for sharing, executing code sni
 First, run the development server:
 
 ```bash
-nvm use node
+nvm use node # Node.js version ">=20.9.0" 
 npm run dev
 ```
 
