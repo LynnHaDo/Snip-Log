@@ -12,7 +12,7 @@ export const runSearchMetadataBackFill = action({
             // Prepare the updates
             const updates = batch.map((snippet) => ({
                 id: snippet._id,
-                metadata: `${snippet.title.toLocaleLowerCase()} ${snippet.userName.toLocaleLowerCase()}`
+                metadata: `${snippet.title.toLocaleLowerCase()}`
             }))
 
             // Apply the updates
