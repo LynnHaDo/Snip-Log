@@ -7,7 +7,7 @@ export const LANGUAGES_CONFIGS: LanguageConfigType = {
     id: "javascript",
     label: "JavaScript",
     logoPath: "/javascript.png",
-    runtimeConfig: { language: "javascript", version: "18.15.0" }, 
+    runtimeConfig: { language: "node", version: "18.0.0" }, 
     monacoLanguage: "javascript",
     defaultCode: `// JavaScript Playground
 const numbers = [1, 2, 3, 4, 5];
@@ -28,8 +28,8 @@ console.log('Sum of numbers:', sum);`,
   typescript: {
     id: "typescript",
     label: "TypeScript",
-    logoPath: "/ts.png",
-    runtimeConfig: { language: "typescript", version: "5.0.3" },
+    logoPath: "/typescript.png",
+    runtimeConfig: { language: "typescript", version: "18.0.0" },
     monacoLanguage: "typescript",
     defaultCode: `// TypeScript Playground
 interface NumberArray {
@@ -88,7 +88,7 @@ print(f"Sum of numbers: {numbers_sum}")`,
     id: "java",
     label: "Java",
     logoPath: "/java.png",
-    runtimeConfig: { language: "java", version: "15.0.2" },
+    runtimeConfig: { language: "java", version: "21.0.0" },
     monacoLanguage: "java",
     defaultCode: `public class Main {
   public static void main(String[] args) {
@@ -130,7 +130,7 @@ print(f"Sum of numbers: {numbers_sum}")`,
     id: "go",
     label: "Go",
     logoPath: "/go.png",
-    runtimeConfig: { language: "go", version: "1.16.2" },
+    runtimeConfig: { language: "go", version: "1.22.0" },
     monacoLanguage: "go",
     defaultCode: `package main
 
@@ -171,7 +171,7 @@ func main() {
     id: "rust",
     label: "Rust",
     logoPath: "/rust.png",
-    runtimeConfig: { language: "rust", version: "1.68.2" },
+    runtimeConfig: { language: "rust", version: "1.77.0" },
     monacoLanguage: "rust",
     defaultCode: `fn main() {
     // Create vector
@@ -204,7 +204,7 @@ func main() {
     id: "cpp",
     label: "C++",
     logoPath: "/cpp.png",
-    runtimeConfig: { language: "cpp", version: "10.2.0" },
+    runtimeConfig: { language: "cpp", version: "latest" },
     monacoLanguage: "cpp",
     defaultCode: `#include <iostream>
 #include <vector>
@@ -248,7 +248,7 @@ int main() {
     id: "csharp",
     label: "C#",
     logoPath: "/csharp.png",
-    runtimeConfig: { language: "csharp", version: "6.12.0" },
+    runtimeConfig: { language: "csharp", version: "8.0.0" },
     monacoLanguage: "csharp",
     defaultCode: `using System;
 using System.Linq;
@@ -279,7 +279,7 @@ class Program {
     id: "ruby",
     label: "Ruby",
     logoPath: "/ruby.png",
-    runtimeConfig: { language: "ruby", version: "3.0.1" },
+    runtimeConfig: { language: "ruby", version: "3.3.0" },
     monacoLanguage: "ruby",
     defaultCode: `# Create array
 numbers = [1, 2, 3, 4, 5]
@@ -303,7 +303,7 @@ puts "Sum of numbers: #{sum}"`,
     id: "swift",
     label: "Swift",
     logoPath: "/swift.png",
-    runtimeConfig: { language: "swift", version: "5.3.3" },
+    runtimeConfig: { language: "swift", version: "5.9.0" },
     monacoLanguage: "swift",
     defaultCode: `// Create array
 let numbers = [1, 2, 3, 4, 5]

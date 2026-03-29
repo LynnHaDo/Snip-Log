@@ -126,7 +126,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             `Successfully completed executing code. Status: ${result.status}`
           );
           set({
-            output: result.output.trim() || "",
+            output: (result.output || "").trim(),
             error: result.error,
           });
         }
