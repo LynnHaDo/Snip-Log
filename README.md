@@ -45,3 +45,9 @@ stripe listen --forward-to http://localhost:3000/api/webhooks/stripe
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 ```
+
+## Testing code execution locally
+
+```
+CODE_EXECUTION_URL={frontend-base-url}/api/execute tsx tests/api/execute/route.test.ts
+```
